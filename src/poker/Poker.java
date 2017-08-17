@@ -13,7 +13,7 @@ public class Poker {
     }
 
     // Returns strength in first index (high card: 0, pair: 1, 2 pair: 2, etc)
-    // Returns output of strength call in second+ index
+    // Returns output of tiebreakersi (aka subStrength) in second+ index
     // Example: As jh 7s 7h 7c --> [3, 7, 13, 11]
     public static int[] handStrengthArray(int[] cards) {
         int[] strengthArray = new int[6];
@@ -22,13 +22,41 @@ public class Poker {
         for (int i = 0; i < 5; i++) 
             valCount[Deck.strength(cards[i])]++;
         int numUnique = 0;
+        int trips = -1; // This will help distinguish between trips & 2 pair
+        int quads = -1; // This will help distinguish between quads & full house
         for (int i = 2; i < 15; i++)
-            if (valCount[i] != 0)
+            if (valCount[i] != 0) {
                 numUnique++;
+                if (valCount[i] == 3)
+                    trips = i;
+                else if (valCount[i] == 4)
+                    quads = i;
+            }
         switch (numUnique) {
             case 2: // 2 unique cards: quads, full house
                 break;
             case 3: // 3 unique cards: trips, 2 pair
+                if (trips != -1) {
+                    strengthArray[0] = 3; // trips
+                    subStrength[0] = trips;
+                    int pos = 1;
+                    for (int i = 14; i >= 2; i--) {
+                        if (valCount[i] == 1) {
+                            subStrength[pos] = i;
+                            pos++; 
+                        }  
+                    }
+                } else {
+                    strengthArray[0] = 2; // 2 pair
+                    int pos = 0;
+                    for (int i = 14; i >= 2; i--)
+                        if (valCount[i] == 2) {
+                            subStrength[pos] = i;
+                            pos++;
+                        } else if (valCount[i] == 1) {
+                            subStrength[2] = i;
+                        }
+                }
                 break;
             case 4: // 4 unique cards: pair
                 strengthArray[0] = 1; // pair
@@ -67,16 +95,6 @@ public class Poker {
         return strengthArray;
     }
 
-    // Returns [quads value, high card] or -1 if no quads
-    private static int[] quads(int[] cards) {
-        return notFound;
-    }
-
-    // Returns [trips value, pair value] or -1 if no full house
-    private static int[] fullHouse(int[] cards) {
-        return notFound;
-    }
-
     // Returns values in flush in descending order or -1 if no flush
     private static int[] flush(int[] cards) {
         for (int i = 0; i < cards.length - 1; i++)
@@ -101,21 +119,6 @@ public class Poker {
                 }
         int[] r = {vals[4]};
         return r;
-    }
-
-    // Returns [trips value, high card 1, high card 2] or -1 if no trips 
-    private static int[] trips (int[] cards) {
-        return notFound;
-    }
-
-    // Returns [higher pair value, lower pair value, high card] or -1 if no 2 pair 
-    private static int[] pair2 (int[] cards) {
-        return notFound;
-    }
-
-    // Returns [pair value, high card 1, high card 2, high card 3] or -1 if no pair 
-    private static int[] pair (int[] cards) {
-        return notFound;
     }
 
     // Returns 5 highest cards in descending order
