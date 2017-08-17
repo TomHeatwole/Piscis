@@ -21,11 +21,11 @@ public class PokerPlayer implements Player {
         return chipCount;
     }
 
-    public addChips(int c) {
+    public void addChips(int c) {
         chipCount += c;
     } 
 
-    public removeChips(int c) {
+    public void removeChips(int c) {
         chipCount -= c;
     }
 }
