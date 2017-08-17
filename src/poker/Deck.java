@@ -131,11 +131,20 @@ public class Deck {
         for (int i = 0; i < 40; i++) {
             d.shuffle();
             int[] hand = new int[5];
+            int[] hand2 = new int[5];
             for (int j = 0; j < 5; j++) {
                 hand[j] = d.next();
+                hand2[j] = d.next();
+            }
+            System.out.print("Hand 1: ");
+            for (int j = 0; j < 5; j++) {
                 System.out.print(Deck.abbr(hand[j]) + " ");
             }
-            System.out.println(Poker.handStrengthArray(hand)[0]);
+            System.out.print(", Hand 2: ");
+            for (int j = 0; j < 5; j++) {
+                System.out.print(Deck.abbr(hand2[j]) + " ");
+            }
+            System.out.println(" - Result: " + Poker.compareHands(hand, hand2));
         }
     }
 }

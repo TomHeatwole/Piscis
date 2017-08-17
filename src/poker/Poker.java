@@ -157,6 +157,13 @@ public class Poker {
     // positive if cards1 wins, negative if cards 2 wins, 0 if tie
     // TODO: It may be necessary later to move this to a comparator 
     public static int compareHands(int[] cards1, int[] cards2) {
+        int[] s1 = handStrengthArray(cards1);
+        int[] s2 = handStrengthArray(cards2);
+        for (int i = 0; i < s1.length; i++)
+            if (s1[i] > s2[i])
+                return 1;
+            else if (s1[i] < s2[i])
+                return -1;
         return 0;
     }
 }
