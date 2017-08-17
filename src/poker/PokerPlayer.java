@@ -2,6 +2,7 @@ public class PokerPlayer implements Player {
 
     public String name;
     public int chipCount;
+
     public PokerPlayer() {
         name = "";
         chipCount = 0;
@@ -20,11 +21,11 @@ public class PokerPlayer implements Player {
         return chipCount;
     }
 
-    public int addChips(int c) {
+    public addChips(int c) {
         chipCount += c;
     } 
 
-    public int removeChips(int c) {
+    public removeChips(int c) {
         chipCount -= c;
     }
 }
