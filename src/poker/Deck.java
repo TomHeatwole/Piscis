@@ -106,8 +106,33 @@ public class Deck {
         return ret;
     }
 
+    // strength of card (2 --> 2, 3 --> 3, ... , J --> 11, ... A --> 14)
+    public static int strength(int c) {
+        if (c%13 == 0)
+            return 14;
+        return c%13 + 1;
+    }
+
+    // helpful utility function for comparisons in card games
+    public static int suitNum(int c) {
+        if (c < 0 || c > 51)
+            throw new java.lang.RuntimeException("Invalid card");        
+        else if (c < 13)
+            return 1;
+        else if (c < 26)
+            return 2;
+        else if (c < 39)
+            return 3;
+        return 4;
+    }
+
     public static void main (String[] args) {
-        int[] hand = new int[5];
+        int[] hand = {3, 6, 1, 7, 0};
         System.out.println(Poker.handStrengthArray(hand)[0]);
+        System.out.println(Poker.handStrengthArray(hand)[1]);
+        System.out.println(Poker.handStrengthArray(hand)[2]);
+        System.out.println(Poker.handStrengthArray(hand)[3]);
+        System.out.println(Poker.handStrengthArray(hand)[4]);
+        System.out.println(Poker.handStrengthArray(hand)[5]);
     }
 }
