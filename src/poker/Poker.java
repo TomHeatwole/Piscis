@@ -34,6 +34,20 @@ public class Poker {
             }
         switch (numUnique) {
             case 2: // 2 unique cards: quads, full house
+                if (quads != -1) { 
+                    strengthArray[0] = 7; // quads
+                    subStrength[0] = quads;
+                    for (int i = 14; i >= 2; i--)
+                        if (valCount[i] == 1)
+                            subStrength[1] = i;
+                } else {
+                    strengthArray[0] = 6; // full house
+                    for (int i = 14; i >= 2; i--)
+                        if (valCount[i] == 3)
+                            subStrength[0] = i;
+                        else if (valCount[i] == 2)
+                            subStrength[1] = i;
+                }
                 break;
             case 3: // 3 unique cards: trips, 2 pair
                 if (trips != -1) {

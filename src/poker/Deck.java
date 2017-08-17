@@ -127,12 +127,15 @@ public class Deck {
     }
 
     public static void main (String[] args) {
-        int[] hand = {8, 17, 34, 4, 5};
-        System.out.println(Poker.handStrengthArray(hand)[0]);
-        System.out.println(Poker.handStrengthArray(hand)[1]);
-        System.out.println(Poker.handStrengthArray(hand)[2]);
-        System.out.println(Poker.handStrengthArray(hand)[3]);
-        System.out.println(Poker.handStrengthArray(hand)[4]);
-        System.out.println(Poker.handStrengthArray(hand)[5]);
+        Deck d = new Deck();
+        for (int i = 0; i < 40; i++) {
+            d.shuffle();
+            int[] hand = new int[5];
+            for (int j = 0; j < 5; j++) {
+                hand[j] = d.next();
+                System.out.print(Deck.abbr(hand[j]) + " ");
+            }
+            System.out.println(Poker.handStrengthArray(hand)[0]);
+        }
     }
 }
