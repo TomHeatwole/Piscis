@@ -16,7 +16,6 @@ public class Poker {
     // Returns output of strength call in second+ index
     // Example: As jh 7s 7h 7c --> [3, 7, 13, 11]
     public static int[] handStrengthArray(int[] cards) {
-        Arrays.sort(cards);
         int[] strengthArray = new int[6];
         int[] subStrength;
         if ((subStrength = straightFlush(cards))[0] > -1)
@@ -46,10 +45,9 @@ public class Poker {
 
     // Returns value of highest card in straightflush or -1 if no straightflush
     private static int[] straightFlush(int[] cards) {
-        if (flush(cards)[0] > -1 && straight(cards)[0] > -1) {
-            int[] r = {Deck.strength(cards[4])}; // Because cards is sorted, index 4 will hold the largest value
+        int[] r = straight(cards); // Highest card in straight will be same as straightflush
+        if (flush(cards)[0] > -1 && r[0] > -1)
             return r;
-        }
         return notFound;
     }
 
@@ -78,7 +76,20 @@ public class Poker {
 
     // Returns highest value in straight or -1 if no straight
     private static int[] straight (int[] cards) {
-        return notFound;
+        int[] vals = new int[5];
+        for (int i = 0; i < 5; i++)
+            vals[i] = Deck.strength(cards[i]);
+        Arrays.sort(vals);
+        for (int i = 0; i < 4; i++)
+            if (vals[i] != vals[i+1] - 1)
+                if (i != 3 || vals[3] != 5 || vals[4] != 14) // check for wheel
+                    return notFound;
+                else {
+                    int[] r = {5};
+                    return r;
+                }
+        int[] r = {vals[4]};
+        return r;
     }
 
     // Returns [trips value, high card 1, high card 2] or -1 if no trips 
