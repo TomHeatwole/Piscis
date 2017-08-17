@@ -1,5 +1,7 @@
 // This class will provide static utility functions for all poker games (ex. checking hand strength)
 
+import java.util.Arrays;
+
 public class Poker {
 
     public static int[] placeHolderForSkeletonFilePleaseDelete;    
@@ -13,46 +15,75 @@ public class Poker {
     // Returns output of strength call in second+ index
     // Example: As jh 7s 7h 7c --> [3, 7, 13, 11]
     public static int[] handStrengthArray(int[] cards) {
-        return placeHolderForSkeletonFilePleaseDelete;
+        placeHolderForSkeletonFilePleaseDelete = new int[1];
+        placeHolderForSkeletonFilePleaseDelete[0] = -1;
+        Arrays.sort(cards);
+        int[] strengthArray = new int[6];
+        int[] subStrength;
+        if ((subStrength = straightFlush(cards))[0] > -1)
+            strengthArray[0] = 8;
+        else if ((subStrength = quads(cards))[0] > -1)
+            strengthArray[0] = 7;
+        else if ((subStrength = fullHouse(cards))[0] > -1)
+            strengthArray[0] = 6;
+        else if ((subStrength = flush(cards))[0] > -1)
+            strengthArray[0] = 5;
+        else if ((subStrength = straight(cards))[0] > -1)
+            strengthArray[0] = 4;
+        else if ((subStrength = trips(cards))[0] > -1)
+            strengthArray[0] = 3;
+        else if ((subStrength = pair2(cards))[0] > -1)
+            strengthArray[0] = 2;
+        else if ((subStrength = pair(cards))[0] > -1)
+            strengthArray[0] = 1;
+        else {
+            subStrength = highCard(cards);
+            strengthArray[0] = 0;
+        }
+        for (int i = 0; i < subStrength.length; i++)
+            strengthArray[i + 1] = subStrength[i];
+        return strengthArray;
     }
 
     // Returns value of highest card in straightflush or -1 if no straightflush
-    public static int straightFlush(int[] cards) {
-        return -1;
+    private static int[] straightFlush(int[] cards) {
+        return placeHolderForSkeletonFilePleaseDelete;
     }
 
     // Returns [quads value, high card] or -1 if no quads
-    public static int[] quads(int[] cards) {
+    private static int[] quads(int[] cards) {
         return placeHolderForSkeletonFilePleaseDelete;
     }
 
     // Returns [trips value, pair value] or -1 if no full house
-    public static int[] fullHouse(int[] cards) {
+    private static int[] fullHouse(int[] cards) {
         return placeHolderForSkeletonFilePleaseDelete;
     }
 
     // Returns values in flush in descending order or -1 if no flush
-    public static int[] flush(int[] cards) {
+    private static int[] flush(int[] cards) {
         return placeHolderForSkeletonFilePleaseDelete;
     }
 
     // Returns highest value in straight or -1 if no straight
-    public static int straight (int[] cards) {
-        return -1;
+    private static int[] straight (int[] cards) {
+        int[] r = new int[3];
+        r[0] = 24;
+        return r;
     }
 
     // Returns [trips value, high card 1, high card 2] or -1 if no trips 
-    public static int[] trips (int[] cards) {
+    private static int[] trips (int[] cards) {
         return placeHolderForSkeletonFilePleaseDelete;
     }
 
     // Returns [higher pair value, lower pair value, high card] or -1 if no 2 pair 
-    public static int[] pair2 (int[] cards) {
+    private static int[] pair2 (int[] cards) {
         return placeHolderForSkeletonFilePleaseDelete;
     }
 
     // Returns [pair value, high card 1, high card 2, high card 3] or -1 if no pair 
-    public static int[] pair (int[] cards) {
+    private static int[] pair (int[] cards) {
         return placeHolderForSkeletonFilePleaseDelete;
     }
 
@@ -66,6 +97,4 @@ public class Poker {
     public static int compareHands(int[] cards1, int[] cards2) {
         return 0;
     }
-
-
 }

@@ -107,11 +107,7 @@ public class Deck {
     }
 
     public static void main (String[] args) {
-        Deck d = new Deck();
-        d.shuffle();
-        while (d.hasNext()) {
-            String card = Deck.abbr(d.next());
-            System.out.println(card + ": " + Deck.name(card));
-        }
+        int[] hand = new int[5];
+        System.out.println(Poker.handStrengthArray(hand)[0]);
     }
 }
