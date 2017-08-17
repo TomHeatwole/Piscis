@@ -17,38 +17,54 @@ public class Poker {
     // Example: As jh 7s 7h 7c --> [3, 7, 13, 11]
     public static int[] handStrengthArray(int[] cards) {
         int[] strengthArray = new int[6];
-        int[] subStrength;
-        if ((subStrength = straightFlush(cards))[0] > -1)
-            strengthArray[0] = 8;
-        else if ((subStrength = quads(cards))[0] > -1)
-            strengthArray[0] = 7;
-        else if ((subStrength = fullHouse(cards))[0] > -1)
-            strengthArray[0] = 6;
-        else if ((subStrength = flush(cards))[0] > -1)
-            strengthArray[0] = 5;
-        else if ((subStrength = straight(cards))[0] > -1)
-            strengthArray[0] = 4;
-        else if ((subStrength = trips(cards))[0] > -1)
-            strengthArray[0] = 3;
-        else if ((subStrength = pair2(cards))[0] > -1)
-            strengthArray[0] = 2;
-        else if ((subStrength = pair(cards))[0] > -1)
-            strengthArray[0] = 1;
-        else {
-            subStrength = highCard(cards);
-            strengthArray[0] = 0;
+        int[] subStrength = new int[5];
+        int[] valCount = new int[15];
+        for (int i = 0; i < 5; i++) 
+            valCount[Deck.strength(cards[i])]++;
+        int numUnique = 0;
+        for (int i = 2; i < 15; i++)
+            if (valCount[i] != 0)
+                numUnique++;
+        switch (numUnique) {
+            case 2: // 2 unique cards: quads, full house
+                break;
+            case 3: // 3 unique cards: trips, 2 pair
+                break;
+            case 4: // 4 unique cards: pair
+                strengthArray[0] = 1; // pair
+                subStrength = new int[4]; // [Pair value, high card 1, high card 2, high card 3]
+                for (int i = 2; i < 15; i++)
+                    if (valCount[i] == 2)
+                        subStrength[0] = i;
+                int pos = 1;
+                for (int i = 14; i >= 2; i--)
+                    if (valCount[i] == 1) {
+                        subStrength[pos] = i;
+                        pos++;
+                    }
+                break;
+            case 5: // 5 unique cards: straightflush, flush, straight, high card
+                int[] s = straight(cards);
+                int[] f = flush(cards);
+                if (s[0] > -1 && f[0] > -1) {
+                    strengthArray[0] = 8; // straightflush
+                    subStrength = s; // Highest card in straight will be same as straightflush
+                } else if (f[0] > -1) {
+                    strengthArray[0] = 5; // flush
+                    subStrength = f;
+                } else if (s[0] > -1) {
+                    strengthArray[0] = 4; // straight
+                    subStrength = s;
+                } else {
+                    strengthArray[0] = 0; // high card
+                    subStrength = highCard(cards);
+                }
+                break;
+
         }
         for (int i = 0; i < subStrength.length; i++)
             strengthArray[i + 1] = subStrength[i];
         return strengthArray;
-    }
-
-    // Returns value of highest card in straightflush or -1 if no straightflush
-    private static int[] straightFlush(int[] cards) {
-        int[] r = straight(cards); // Highest card in straight will be same as straightflush
-        if (flush(cards)[0] > -1 && r[0] > -1)
-            return r;
-        return notFound;
     }
 
     // Returns [quads value, high card] or -1 if no quads
@@ -66,12 +82,7 @@ public class Poker {
         for (int i = 0; i < cards.length - 1; i++)
             if (Deck.suitNum(cards[i]) != Deck.suitNum(cards[i+1]))
                 return notFound;
-        int[] r = new int[5];
-        for (int i = 0; i < 5; i++)
-            r[i] = Deck.strength(cards[i]);
-        Arrays.sort(r); 
-        reverse(r);
-        return r; 
+        return highCard(cards); // Order of substrength is same for flush and high card
     }
 
     // Returns highest value in straight or -1 if no straight
@@ -109,7 +120,12 @@ public class Poker {
 
     // Returns 5 highest cards in descending order
     private static int[] highCard (int[] cards) {
-        return notFound;
+        int[] r = new int[5];
+        for (int i = 0; i < 5; i++)
+            r[i] = Deck.strength(cards[i]);
+        Arrays.sort(r); 
+        reverse(r);
+        return r; 
     }
 
     // Array reversal is an important utility function for this class

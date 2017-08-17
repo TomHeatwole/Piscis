@@ -127,7 +127,7 @@ public class Deck {
     }
 
     public static void main (String[] args) {
-        int[] hand = {3, 2, 1, 4, 0};
+        int[] hand = {8, 2, 34, 4, 5};
         System.out.println(Poker.handStrengthArray(hand)[0]);
         System.out.println(Poker.handStrengthArray(hand)[1]);
         System.out.println(Poker.handStrengthArray(hand)[2]);
