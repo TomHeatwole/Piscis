@@ -52,6 +52,8 @@ public class HoldEmMatch implements PokerMatch {
         while (handsRemaining > 0)
             switch(state) {
                 case "newHand":
+                    handsRemaining--;
+                    resetCards();
                     deck.shuffle();
                     p1c1 = deck.next();
                     p1c2 = deck.next();
@@ -62,6 +64,7 @@ public class HoldEmMatch implements PokerMatch {
                     state = "preflop";
                     break;
                 case: "preflop":
+                    
                     break;
             }
     }
