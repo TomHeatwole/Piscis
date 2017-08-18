@@ -12,6 +12,7 @@ public class HoldEmMatch implements PokerMatch {
     private Deck deck;
     private int score; // amount player 1 is up by. (Negative when player 2 is ahead)
     private boolean button; // true when player1 is on the button
+    private boolean act; // true when player1 has the action
     private String state; 
 
     private int p1c1; // player 1 card 1
@@ -48,13 +49,34 @@ public class HoldEmMatch implements PokerMatch {
         r = -1;
     }
     private void play() {
+        while (handsRemaining > 0)
+            switch(state) {
+                case "newHand":
+                    deck.shuffle();
+                    p1c1 = deck.next();
+                    p1c2 = deck.next();
+                    p2c1 = deck.next();
+                    p2c2 = deck.next();
+                    button = !button;
+                    act = button;
+                    state = "preflop";
+                    break;
+                case: "preflop":
+                    break;
+            }
     }
     
     public int numPlayers() {
         return 2;    
     }
+
     public List<Player> players() {
         ArrayList<Player> players = new ArrayList<Player>();
     }
+
+    //TODO: Change implementation to output to whatever platform the game runs on
+    private void output (String s) {
+        System.out.println(s);
+    }
     
-}      
+}
