@@ -75,6 +75,9 @@ public class HoldEmMatch implements PokerMatch {
 
     public List<Player> players() {
         ArrayList<Player> players = new ArrayList<Player>();
+        players.add(p1);
+        players.add(p2);
+        return players;
     }
 
     //TODO: Change implementation to output to whatever platform the game runs on
