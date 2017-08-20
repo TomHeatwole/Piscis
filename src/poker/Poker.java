@@ -9,7 +9,34 @@ public class Poker {
 
     // Returns hand strength for a given set of cards
     public static String handStrength(int[] cards) {
-        return "placeholder";
+        int[] handStrengthArr = handStrengthArray(cards);
+        String ret = "";
+        char abbrStrength = Deck.abbr(handStrengthArr[1]).charAt(0)
+        switch (handStrengthArr[0]){
+            case 8: //straight flush
+                return abbrStrength + "-high straight flush of " + Deck.suitName(cards[0]);
+            case 7: //quads
+                return "Quad " + abbrStrength + "s";
+            case 6: //full house
+                char secondaryAbbrStrength = Deck.abbr(handStrengthArr[2]).charAt(0);
+                return abbrStrength + "s full of " + secondaryAbbrStrength + "s";
+            case 5: //flush
+                return abbrStrength + "-high flush of " + Deck.suitName(cards[0]);
+            case 4: //straight
+                return abbrStrength + "-high straight";
+            case 3: //trips
+                return "trip " + abbrStrength + "s";
+            case 2: //two pair
+                char secondaryAbbrStrength = Deck.abbr(handStrengthArr[2]).charAt(0);
+                return "two pair: " + abbrStrength + "s and " + secondaryAbbrStrength + "s";
+            case 1: //pair
+                return "pair of " + abbrStrength + "s";
+            case 0: //high card
+                return "high card: " + abbrStrength;
+            default:
+                throw new java.lang.RuntimeException("Unexpected input for handStrength: " + cards.toString());
+        }
+        return ""; 
     }
 
     // Returns strength in first index (high card: 0, pair: 1, 2 pair: 2, etc)

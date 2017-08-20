@@ -126,6 +126,19 @@ public class Deck {
         return 4;
     }
 
+    // get name of given card's suit
+    public static int suitName(int c) {
+        if (c < 0 || c > 51)
+            throw new java.lang.RuntimeException("Invalid card");
+        else if (c < 13)
+            return "Spades"
+        else if (c < 26)
+            return "Diamonds"
+        else if (c < 39)
+            return "Hearts"
+        return "Clubs"
+    }
+
     public static void main (String[] args) {
         Deck d = new Deck();
         for (int i = 0; i < 40; i++) {
@@ -145,6 +158,8 @@ public class Deck {
                 System.out.print(Deck.abbr(hand2[j]) + " ");
             }
             System.out.println(" - Result: " + Poker.compareHands(hand, hand2));
+            System.out.println("HandStrength 1: " + Poker.handStrength(hand));
+            System.out.println("HandStrength 2: " + Poker.handStrength(hand2));
         }
     }
 }
