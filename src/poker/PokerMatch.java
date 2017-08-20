@@ -7,35 +7,51 @@ public abstract class PokerMatch implements Match {
     
     private int handsRemaining;
     private List<Player> players;
+    private Map<Player,int> net; 
     private Deck deck;
     private int button; // position of the button 
-    private int streetsToShowdown; 
-    private int initialChipCounts; 
+    private int initialChipCounts;
  
-    public PokerMatch(int numHands, int numPlayers, int streetsToShowdown, int initialChipCounts) {
+    public PokerMatch(int numHands, int numPlayers, int initialChipCounts) {
         this.handsRemaining = numHands;
         this.deck = new Deck();
-        this.streetsToShowdown = streetsToShowdown; 
+        this.net = new HashMap<Player,int>();
+        this.initialChipCounts = initialChipCounts; 
         intializePlayers(numPlayers, initialChipCounts); 
         play();
     }
     
     private void play() {
+        button = Math.random() * players.size(); 
         while (handsRemaining > 0){
-            /*pseudocode:
-            for int i = 0 -> streetsToShowdown
-                call abstract process street method; e.g. in hold em it would be implemented as processStreet(0)->deal two cards to each player, 1-> flop, 2->turn, 3->river
-                call non-abstract method to process betting round
-                if betting round results in end of hand, break.
-            if didn't break out of for loop, call abstrat showdown method.
-            Call method to assign chips to appropriate players given result.*/
+            deck.shuffle();
+            Map<Player,int> results = processHand(players, deck, button); 
+            updateNetAndResetCounts(results); 
+            button = (button + 1) % players.size(); 
             handsRemaining--; 
         }
     }
-   
+    
+    //abstract since this is where different poker variants differ 
+    public abstract Map<Player,int> processHand(List<Player> players, Deck deck, int button){}; 
+
+    private void updateNetAndResetCounts(Map<Player,int> results){
+        for(Map.Entry<Player,int> entry: results.entrySet()){
+            player = entry.getKey();
+            result = entry.getValue();
+            net.put(player, net.get(player) + result); 
+        }
+        for(Player p: players){
+            p.setChips(initialChipCounts);
+        } 
+    }
+ 
     private void initializePlayers(int numPlayers, int initialChipCounts){ 
         for(int i = 0; i < numPlayers; i++){
             this.players.add(new Player("TODO Actual name", initialChipCounts, i));
+        } 
+        for(Player p: players){
+            this.net.put(p,0); 
         } 
     }
 

@@ -43,6 +43,9 @@ public class PokerPlayer implements Player {
         chipCount -= c;
     }
 
+    public void setChips(int c){
+        chipCount = c;
+    }
     public void setHand(int[] hand){
         this.hand = hand; 
     } 
