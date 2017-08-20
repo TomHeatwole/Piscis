@@ -127,16 +127,16 @@ public class Deck {
     }
 
     // get name of given card's suit
-    public static int suitName(int c) {
+    public static String suitName(int c) {
         if (c < 0 || c > 51)
             throw new java.lang.RuntimeException("Invalid card");
         else if (c < 13)
-            return "Spades"
+            return "Spades";
         else if (c < 26)
-            return "Diamonds"
+            return "Diamonds";
         else if (c < 39)
-            return "Hearts"
-        return "Clubs"
+            return "Hearts";
+        return "Clubs";
     }
 
     public static void main (String[] args) {

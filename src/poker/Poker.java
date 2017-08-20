@@ -11,14 +11,15 @@ public class Poker {
     public static String handStrength(int[] cards) {
         int[] handStrengthArr = handStrengthArray(cards);
         String ret = "";
-        char abbrStrength = Deck.abbr(handStrengthArr[1]).charAt(0)
+        char abbrStrength = Deck.abbr(handStrengthArr[1]-1).charAt(0);
+        char secondaryAbbrStrength; 
         switch (handStrengthArr[0]){
             case 8: //straight flush
                 return abbrStrength + "-high straight flush of " + Deck.suitName(cards[0]);
             case 7: //quads
                 return "Quad " + abbrStrength + "s";
             case 6: //full house
-                char secondaryAbbrStrength = Deck.abbr(handStrengthArr[2]).charAt(0);
+                secondaryAbbrStrength = Deck.abbr(handStrengthArr[2]-1).charAt(0);
                 return abbrStrength + "s full of " + secondaryAbbrStrength + "s";
             case 5: //flush
                 return abbrStrength + "-high flush of " + Deck.suitName(cards[0]);
@@ -27,7 +28,7 @@ public class Poker {
             case 3: //trips
                 return "trip " + abbrStrength + "s";
             case 2: //two pair
-                char secondaryAbbrStrength = Deck.abbr(handStrengthArr[2]).charAt(0);
+                secondaryAbbrStrength = Deck.abbr(handStrengthArr[2]-1).charAt(0);
                 return "two pair: " + abbrStrength + "s and " + secondaryAbbrStrength + "s";
             case 1: //pair
                 return "pair of " + abbrStrength + "s";
@@ -36,12 +37,11 @@ public class Poker {
             default:
                 throw new java.lang.RuntimeException("Unexpected input for handStrength: " + cards.toString());
         }
-        return ""; 
     }
 
     // Returns strength in first index (high card: 0, pair: 1, 2 pair: 2, etc)
     // Returns output of tiebreakersi (aka subStrength) in second+ index
-    // Example: As jh 7s 7h 7c --> [3, 7, 13, 11]
+    // Example: As jh 7s 7h 7c --> [3, 7, 14, 11]
     public static int[] handStrengthArray(int[] cards) {
         int[] strengthArray = new int[6];
         int[] subStrength = new int[5];
