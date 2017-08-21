@@ -1,5 +1,3 @@
-// Heads up no limit hold 'em
-
 import java.util.*;
 
 public abstract class PokerMatch implements Match {
@@ -46,7 +44,7 @@ public abstract class PokerMatch implements Match {
         }
     }
     
-    public abstract int showdown();
+    public abstract List<Integer> showdown();
 
     //TODO: call showdown, update results
     public void processShowdown(){

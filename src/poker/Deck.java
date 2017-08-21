@@ -161,5 +161,6 @@ public class Deck {
             System.out.println("HandStrength 1: " + Poker.handStrength(hand));
             System.out.println("HandStrength 2: " + Poker.handStrength(hand2));
         }
+
     }
 }

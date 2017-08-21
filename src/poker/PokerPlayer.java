@@ -1,9 +1,9 @@
 public class PokerPlayer implements Player {
 
-    public String name;
-    public int chipCount;
-    public int seatNumber;
-    public int[] hand;
+    private String name;
+    private int chipCount;
+    private int seatNumber;
+    private int[] hand;
 
     public PokerPlayer() {
         this.name = "";

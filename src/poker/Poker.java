@@ -136,6 +136,12 @@ public class Poker {
         return strengthArray;
     }
 
+    public static int[] handStrengthArray(int a, int b, int c, int d, int e) {
+        int[] cards = {a, b, c, d, e};
+        return handStrengthArray(cards);
+    }
+
+
     // Returns values in flush in descending order or -1 if no flush
     private static int[] flush(int[] cards) {
         for (int i = 0; i < cards.length - 1; i++)
