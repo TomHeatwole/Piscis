@@ -31,7 +31,7 @@ public abstract class PokerMatch implements Match {
         this.ante = structure[2]; 
     }
     
-    private void play() {
+    public void play() {
         button = (int)(Math.random() * players.length); 
         while (handsRemaining > 0){
             isHandOver = false;
@@ -96,6 +96,7 @@ public abstract class PokerMatch implements Match {
                 streetResults.put(playerToAct, streetResults.get(playerToAct) - smallBlind);
                 potSize += smallBlind;
                 blindsToPost--;
+                output("Player " + playerToAct.getSeatNum() + " posts small blind.");
                 continue;
             }
             if(blindsToPost == 1){
@@ -103,6 +104,7 @@ public abstract class PokerMatch implements Match {
                 streetResults.put(playerToAct, streetResults.get(playerToAct) - bigBlind);
                 potSize += bigBlind;
                 blindsToPost--;
+                output("Player " + playerToAct.getSeatNum() + " posts big blind.");
                 continue;
             } 
             String input = processInput(playerToAct);
@@ -170,7 +172,7 @@ public abstract class PokerMatch implements Match {
     public boolean valsAreAllTheSame(Map<PokerPlayer, Integer> m){
         int count = 0;
         int firstVal = 0; 
-        for(Map.Entry<PokerPlayer,Integer> entry: results.entrySet()){
+        for(Map.Entry<PokerPlayer,Integer> entry: m.entrySet()){
             count++;
             if(count == 1){
                 firstVal = entry.getValue();
@@ -210,9 +212,15 @@ public abstract class PokerMatch implements Match {
     }
 
     public void deal(int n) {
-        for (int i = 0; i < n; i++)
-            for (PokerPlayer p : players)
-                p.dealCard(deck.next());
+        for (PokerPlayer p: players){
+            String outputStr = "Player " + p.getSeatNum() + "'s hand: ";
+            for (int i = 0; i < n; i++){
+                int next = deck.next();
+                p.dealCard(next);
+                outputStr += Deck.abbr(next); 
+            }
+            output(outputStr);
+        }
         // TODO: Add output
     }
 

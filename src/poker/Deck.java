@@ -163,6 +163,7 @@ public class Deck {
         }
         int[] structure = {1,2,0};
         HoldEmMatch a = new HoldEmMatch(5,2,200,structure);
+        a.play();
         /*System.out.print(Deck.abbr(a.getPlayers().get(0).getHand()[0]));
         System.out.println(Deck.abbr(a.getPlayers().get(0).getHand()[1]));
         System.out.print(Deck.abbr(a.getPlayers().get(1).getHand()[0]));
