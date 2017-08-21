@@ -47,8 +47,6 @@ public class HoldEmMatch extends PokerMatch {
         List<PokerPlayer> w  = new ArrayList<PokerPlayer>();
         int[] h0 = bestHand(players[0]);
         int[] h1 = bestHand(players[1]);
-        System.out.println(Poker.handStrengthArrayToHandStrength(h0));
-        System.out.println(Poker.handStrengthArrayToHandStrength(h1));
         int result = Poker.compareHands(h0, h1);
         if (result == 1) {
             w.add(players[0]);
