@@ -46,7 +46,7 @@ public abstract class PokerMatch implements Match {
         }
     }
     
-    private abstract int showdown(){};
+    public abstract int showdown();
 
     //TODO: call showdown, update results
     public void processShowdown(){
