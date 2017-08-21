@@ -9,7 +9,7 @@ public class HoldEmMatch extends PokerMatch {
     private int handsRemaining;
     private Deck deck;
 
-    int[] board; 
+    private int[] board; 
     
     public HoldEmMatch(int numHands, int numPlayers, int initialChipCounts) {
         this.super(numHands);
@@ -23,7 +23,7 @@ public class HoldEmMatch extends PokerMatch {
         }
     }
     
-    private void processStreet(int street) {
+    public void processStreet(int street) {
         switch (street) {
             case 0: // preflop
                 resetBoard();
@@ -34,17 +34,17 @@ public class HoldEmMatch extends PokerMatch {
                 board[0] = deck.next();
                 board[1] = deck.next();
                 board[2] = deck.next();
-                output("f:" + Deck.getAbbr(board[0]) +  Deck.getAbbr(board[1]) + Deck.getAbbr(board[2]));                
+                output("f:" + Deck.abbr(board[0]) +  Deck.abbr(board[1]) + Deck.abbr(board[2]));                
                 break;
             case 2: // turn
                 deck.next(); // burn
                 board[3] = deck.next();
-                output("t:" + Deck.getAbbr(board[4]));
+                output("t:" + Deck.abbr(board[4]));
                 break;
             case 3: // river
                 deck.next(); // burn
                 board[4] = deck.next();
-                output("r:" + Deck.getAbbr(board[4]));
+                output("r:" + Deck.abbr(board[4]));
                 break;
         }
     }
@@ -109,5 +109,13 @@ public class HoldEmMatch extends PokerMatch {
         best = (Poker.compareHands(best, next) == 1) ? best : next;
     
         return best;
+    }
+
+    public List<PokerPlayer> getPlayers() {
+        return players;
+    }
+
+    public int[] processHand(List<PokerPlayer> players, Deck deck, int button) {
+        return (new int[0]);
     }
 }

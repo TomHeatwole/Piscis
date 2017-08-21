@@ -161,6 +161,13 @@ public class Deck {
             System.out.println("HandStrength 1: " + Poker.handStrength(hand));
             System.out.println("HandStrength 2: " + Poker.handStrength(hand2));
         }
-
+        HoldEmMatch a = new HoldEmMatch(0,0,0);
+        for (int i = 0; i < 4; i++)
+            a.processStreet(i);
+        System.out.print(Deck.abbr(a.getPlayers().get(0).getHand()[0]));
+        System.out.println(Deck.abbr(a.getPlayers().get(0).getHand()[1]));
+        System.out.print(Deck.abbr(a.getPlayers().get(1).getHand()[0]));
+        System.out.println(Deck.abbr(a.getPlayers().get(1).getHand()[1]));
+        System.out.println(a.showdown().get(0));
     }
 }

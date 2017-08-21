@@ -26,7 +26,7 @@ public abstract class PokerMatch implements Match {
         while (handsRemaining > 0){
             isHandOver = false;
             deck.shuffle();
-            for(PokerPlayer p: players)
+            for(PokerPlayer p : players)
                 results.put(p,0); 
             for(int street = 0; street < numStreets+1; street++){
                 processStreet(street); 
@@ -78,6 +78,13 @@ public abstract class PokerMatch implements Match {
             this.net.put(p,0); 
             this.results.put(p,0);
         } 
+    }
+
+    public void deal(int n) {
+        for (int i = 0; i < n; i++)
+            for (PokerPlayer p : players)
+                p.dealCard(deck.next());
+        // TODO: Add output
     }
 
     //TODO: Change implementation to output to whatever platform the game runs on
