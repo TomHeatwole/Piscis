@@ -1,5 +1,3 @@
-// Heads up no limit hold 'em
-
 import java.util.List;
 import java.util.ArrayList;
 
@@ -35,7 +33,7 @@ public class HoldEmMatch extends PokerMatch {
             case 2: // turn
                 deck.next(); // burn
                 board[3] = deck.next();
-                output("t:" + Deck.abbr(board[4]));
+                output("t:" + Deck.abbr(board[3]));
                 break;
             case 3: // river
                 deck.next(); // burn
@@ -47,12 +45,16 @@ public class HoldEmMatch extends PokerMatch {
 
     public List<PokerPlayer> showdown() {
         List<PokerPlayer> w  = new ArrayList<PokerPlayer>();
-        int result = Poker.compareHands(bestHand(players[0]), bestHand(players[1]));
-        if (result == 1)
+        int[] h0 = bestHand(players[0]);
+        int[] h1 = bestHand(players[1]);
+        System.out.println(Poker.handStrengthArrayToHandStrength(h0));
+        System.out.println(Poker.handStrengthArrayToHandStrength(h1));
+        int result = Poker.compareHands(h0, h1);
+        if (result == 1) {
             w.add(players[0]);
-        else if (result == -1)
+        } else if (result == -1) {
             w.add(players[1]);
-        else {
+        } else {
             w.add(players[0]);
             w.add(players[1]);
         }
