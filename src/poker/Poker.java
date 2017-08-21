@@ -10,19 +10,23 @@ public class Poker {
     // Returns hand strength for a given set of cards
     public static String handStrength(int[] cards) {
         int[] handStrengthArr = handStrengthArray(cards);
+        return handStrengthArrayToHandStrength(handStrengthArr);
+    }
+
+    public static String handStrengthArrayToHandStrength(int[] handStrengthArr) {
         String ret = "";
         char abbrStrength = Deck.abbr(handStrengthArr[1]-1).charAt(0);
         char secondaryAbbrStrength; 
         switch (handStrengthArr[0]){
             case 8: //straight flush
-                return abbrStrength + "-high straight flush of " + Deck.suitName(cards[0]);
+                return abbrStrength + "-high straight flush of "; // + Deck.suitName(cards[0]); TODOL say suit of straightflush
             case 7: //quads
                 return "Quad " + abbrStrength + "s";
             case 6: //full house
                 secondaryAbbrStrength = Deck.abbr(handStrengthArr[2]-1).charAt(0);
                 return abbrStrength + "s full of " + secondaryAbbrStrength + "s";
             case 5: //flush
-                return abbrStrength + "-high flush of " + Deck.suitName(cards[0]);
+                return abbrStrength + "-high flush of "; // + Deck.suitName(cards[0]); TODO: say suit of flush 
             case 4: //straight
                 return abbrStrength + "-high straight";
             case 3: //trips
@@ -35,7 +39,7 @@ public class Poker {
             case 0: //high card
                 return "high card: " + abbrStrength;
             default:
-                throw new java.lang.RuntimeException("Unexpected input for handStrength: " + cards.toString());
+                throw new java.lang.RuntimeException("Unexpected input for handStrength: ");
         }
     }
 
