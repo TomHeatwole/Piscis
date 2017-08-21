@@ -34,7 +34,7 @@ public class PokerPlayer implements Player {
         return chipCount;
     }
 
-    public int getSeatNumber(){
+    public int getSeatNum(){
         return seatNumber;
     }
 
