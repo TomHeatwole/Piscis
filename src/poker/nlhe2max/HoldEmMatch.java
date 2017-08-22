@@ -13,7 +13,7 @@ public class HoldEmMatch extends PokerMatch {
 
     private void resetBoard() {
         for (int i = 0; i < 5; i++) {
-            board[i] = -1;
+           board[i] = -1;
         }
     }
     
@@ -61,49 +61,15 @@ public class HoldEmMatch extends PokerMatch {
     }
     
     private int[] bestHand (PokerPlayer p) {
-        int[] best = Poker.handStrengthArray(board);
-        int[] next = Poker.handStrengthArray(board[0], board[1], board[2], board[3], p.getHand()[0]);
-        best = (Poker.compareHands(best, next) == 1) ? best : next;
-        next = Poker.handStrengthArray(board[0], board[1], board[2], board[3], p.getHand()[1]);
-        best = (Poker.compareHands(best, next) == 1) ? best : next;
-        next = Poker.handStrengthArray(board[0], board[1], board[2], board[4], p.getHand()[0]);
-        best = (Poker.compareHands(best, next) == 1) ? best : next;
-        next = Poker.handStrengthArray(board[0], board[1], board[2], board[4], p.getHand()[1]);
-        best = (Poker.compareHands(best, next) == 1) ? best : next;
-        next = Poker.handStrengthArray(board[0], board[1], board[3], board[4], p.getHand()[0]);
-        best = (Poker.compareHands(best, next) == 1) ? best : next;
-        next = Poker.handStrengthArray(board[0], board[1], board[3], board[4], p.getHand()[1]);
-        best = (Poker.compareHands(best, next) == 1) ? best : next;
-        next = Poker.handStrengthArray(board[0], board[2], board[3], board[4], p.getHand()[0]);
-        best = (Poker.compareHands(best, next) == 1) ? best : next;
-        next = Poker.handStrengthArray(board[0], board[2], board[3], board[4], p.getHand()[1]);
-        best = (Poker.compareHands(best, next) == 1) ? best : next;
-        next = Poker.handStrengthArray(board[1], board[2], board[3], board[4], p.getHand()[0]);
-        best = (Poker.compareHands(best, next) == 1) ? best : next;
-        next = Poker.handStrengthArray(board[1], board[2], board[3], board[4], p.getHand()[1]);
-        best = (Poker.compareHands(best, next) == 1) ? best : next;
-
-        next = Poker.handStrengthArray(board[0], board[1], board[2], p.getHand()[0], p.getHand()[1]);
-        best = (Poker.compareHands(best, next) == 1) ? best : next;
-        next = Poker.handStrengthArray(board[0], board[1], board[3], p.getHand()[0], p.getHand()[1]);
-        best = (Poker.compareHands(best, next) == 1) ? best : next;
-        next = Poker.handStrengthArray(board[0], board[1], board[4], p.getHand()[0], p.getHand()[1]);
-        best = (Poker.compareHands(best, next) == 1) ? best : next;
-        next = Poker.handStrengthArray(board[0], board[2], board[3], p.getHand()[0], p.getHand()[1]);
-        best = (Poker.compareHands(best, next) == 1) ? best : next;
-        next = Poker.handStrengthArray(board[0], board[2], board[4], p.getHand()[0], p.getHand()[1]);
-        best = (Poker.compareHands(best, next) == 1) ? best : next;
-        next = Poker.handStrengthArray(board[0], board[3], board[4], p.getHand()[0], p.getHand()[1]);
-        best = (Poker.compareHands(best, next) == 1) ? best : next;
-        next = Poker.handStrengthArray(board[1], board[2], board[3], p.getHand()[0], p.getHand()[1]);
-        best = (Poker.compareHands(best, next) == 1) ? best : next;
-        next = Poker.handStrengthArray(board[1], board[2], board[4], p.getHand()[0], p.getHand()[1]);
-        best = (Poker.compareHands(best, next) == 1) ? best : next;
-        next = Poker.handStrengthArray(board[1], board[3], board[4], p.getHand()[0], p.getHand()[1]);
-        best = (Poker.compareHands(best, next) == 1) ? best : next;
-        next = Poker.handStrengthArray(board[2], board[3], board[4], p.getHand()[0], p.getHand()[1]);
-        best = (Poker.compareHands(best, next) == 1) ? best : next;
-    
+        int[] cards = {board[0], board[1], board[2], board[3], board[4], p.getHand()[0], p.getHand()[1]};
+        int[] data = new int[5];        
+        ArrayList<int[]> combos = new ArrayList<int[]>();
+        Poker.generateCombinations(cards, data, 0, 6, 0, 5, combos);
+        int[] best = combos.get(0);
+        for (int i = 1; i < combos.size(); i++) {
+            int[] next = combos.get(i); 
+            best = (Poker.compareHands(best, next) == 1) ? best : next;
+        }
         return best;
     }
 

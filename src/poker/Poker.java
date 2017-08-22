@@ -2,6 +2,7 @@
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 public class Poker {
 
@@ -202,5 +203,20 @@ public class Poker {
             else if (s1[i] < s2[i])
                 return -1;
         return 0;
+    }
+
+    public static void generateCombinations(int arr[], int data[], int start,
+                                int end, int index, int r, List<int[]> combos) {
+        if (index == r) {
+            int[] combo = new int[r];
+            for (int j = 0; j < r; j++)
+                combo[j] = data[j];
+            combos.add(combo);
+            return;
+        }
+        for (int i=start; i<=end && end-i+1 >= r-index; i++) {
+            data[index] = arr[i];
+            generateCombinations(arr, data, i+1, end, index+1, r, combos);
+        }
     }
 }
