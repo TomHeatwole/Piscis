@@ -62,14 +62,14 @@ public abstract class PokerMatch implements Match {
         int amountEachPlayerWins = potSize / winners.size();
         for(PokerPlayer p: winners){
             results.put(p, results.get(p) + amountEachPlayerWins);
-            output("Player " + p.getSeatNum() + " wins " + amountEachPlayerWins);
+            io.output("Player " + p.getSeatNum() + " wins " + amountEachPlayerWins);
         } 
     }
 
     public void processBetting(int street){
         Map<PokerPlayer, Integer> streetResults = new HashMap<PokerPlayer, Integer>();
         for(PokerPlayer p: playersInHand){
-            streetResults.put(p,ante * -1);
+            streetResults.put(p,(street == 0 ? ante * -1 : 0));
         }
         int blindsToPost = 0;
         if(smallBlind > 0 && bigBlind > 0 && street == 0)
@@ -78,7 +78,7 @@ public abstract class PokerMatch implements Match {
         int posToAct = (button + 1) % players.length;
         if(headsUpPreflop)
             posToAct = button;
-        int lastPosToAct = (posToAct + blindsToPost - 1) % players.length;
+        int lastPosToAct = (posToAct + blindsToPost - 1 + players.length) % players.length;
         boolean rotationComplete = false; 
         while(!(rotationComplete && (playersInHand.size() == 1 || valsAreAllTheSame(streetResults)))){
             if(headsUpPreflop && blindsToPost == 0){
@@ -97,7 +97,7 @@ public abstract class PokerMatch implements Match {
                 streetResults.put(playerToAct, streetResults.get(playerToAct) - smallBlind);
                 potSize += smallBlind;
                 blindsToPost--;
-                output("Player " + playerToAct.getSeatNum() + " posts small blind.");
+                io.output("Player " + playerToAct.getSeatNum() + " posts small blind.");
                 continue;
             }
             if(blindsToPost == 1){
@@ -105,14 +105,14 @@ public abstract class PokerMatch implements Match {
                 streetResults.put(playerToAct, streetResults.get(playerToAct) - bigBlind);
                 potSize += bigBlind;
                 blindsToPost--;
-                output("Player " + playerToAct.getSeatNum() + " posts big blind.");
+                io.output("Player " + playerToAct.getSeatNum() + " posts big blind.");
                 continue;
             } 
             String input = processInput(playerToAct);
             if(!validateInput(input, streetResults, playerToAct)){
                 //what should we do if the input is wrong?
             }
-            output("Player " + playerToAct.getSeatNum() + " did " + input);
+            io.output("Player " + playerToAct.getSeatNum() + " did " + input);
             String[] splitInp = input.split(" ");
             String action = splitInp[0];
             switch(action){
@@ -143,7 +143,7 @@ public abstract class PokerMatch implements Match {
         if(playersInHand.size() == 1){
             streetResults.put(playersInHand.get(0), streetResults.get(playersInHand.get(0)) + potSize);
             isHandOver = true;
-            output("Player " + playersInHand.get(0).getSeatNum() + " wins pot of " + potSize);
+            io.output("Player " + playersInHand.get(0).getSeatNum() + " wins pot of " + potSize);
         }
         for(Map.Entry<PokerPlayer,Integer> entry: streetResults.entrySet()){
             results.put(entry.getKey(), results.get(entry.getKey()) + entry.getValue());
@@ -181,7 +181,6 @@ public abstract class PokerMatch implements Match {
                 continue;
             }
             if(entry.getValue() != firstVal){
-                System.out.println("rip");
                 return false;
             }
         }
@@ -222,14 +221,9 @@ public abstract class PokerMatch implements Match {
                 p.dealCard(next);
                 outputStr += Deck.abbr(next); 
             }
-            output(outputStr);
+            io.output(outputStr);
         }
         // TODO: Add output
     }
 
-    //TODO: Change implementation to output to whatever platform the game runs on
-    public void output (String s) {
-        System.out.println(s);
-    }
-    
 }
