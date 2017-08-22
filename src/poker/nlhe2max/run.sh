@@ -14,9 +14,13 @@ for file in *.class
 do      
     pos=$(strindex $file .class)
     className=$( echo $file | cut -c1-$pos )
-    classes="$classes $className"
+    if [ "$className" != "Driver" ]
+    then
+        classes="$classes $className"
+    fi
 done
-java $classes
+echo $classes 
+java Driver $classes
 cd ..
 rm test/*
 rmdir test
