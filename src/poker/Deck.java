@@ -163,12 +163,13 @@ public class Deck {
         }
         int[] structure = {1,2,0};
         HoldEmMatch a = new HoldEmMatch(5,2,200,structure);
-        for (int i = 0; i < 4; i++)
+        a.play();
+        /*for (int i = 0; i < 4; i++)
             a.processStreet(i);
         System.out.print(Deck.abbr(a.getPlayers()[0].getHand()[0]));
         System.out.println(Deck.abbr(a.getPlayers()[0].getHand()[1]));
         System.out.print(Deck.abbr(a.getPlayers()[1].getHand()[0]));
         System.out.println(Deck.abbr(a.getPlayers()[1].getHand()[1]));
-        System.out.println(Deck.abbr(a.showdown().get(0).getHand()[0]) + " " + Deck.abbr(a.showdown().get(0).getHand()[1]));
+        System.out.println(Deck.abbr(a.showdown().get(0).getHand()[0]) + " " + Deck.abbr(a.showdown().get(0).getHand()[1]));*/
     }
 }

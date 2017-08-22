@@ -62,6 +62,7 @@ public abstract class PokerMatch implements Match {
         int amountEachPlayerWins = potSize / winners.size();
         for(PokerPlayer p: winners){
             results.put(p, results.get(p) + amountEachPlayerWins);
+            output("Player " + p.getSeatNum() + " wins " + amountEachPlayerWins);
         } 
     }
 
@@ -77,14 +78,14 @@ public abstract class PokerMatch implements Match {
         int posToAct = (button + 1) % players.length;
         if(headsUpPreflop)
             posToAct = button;
-        int initialPosToAct = (posToAct + blindsToPost) % players.length;
+        int lastPosToAct = (posToAct + blindsToPost - 1) % players.length;
         boolean rotationComplete = false; 
         while(!(rotationComplete && (playersInHand.size() == 1 || valsAreAllTheSame(streetResults)))){
             if(headsUpPreflop && blindsToPost == 0){
                 if(posToAct != button)
                     rotationComplete = true;
             }
-            else if(posToAct == initialPosToAct && blindsToPost == 0)
+            else if(posToAct == lastPosToAct && blindsToPost == 0)
                 rotationComplete = true;
             PokerPlayer playerToAct = players[posToAct]; 
             if(!playersInHand.contains(playerToAct)){
@@ -142,6 +143,7 @@ public abstract class PokerMatch implements Match {
         if(playersInHand.size() == 1){
             streetResults.put(playersInHand.get(0), streetResults.get(playersInHand.get(0)) + potSize);
             isHandOver = true;
+            output("Player " + playersInHand.get(0).getSeatNum() + " wins pot of " + potSize);
         }
         for(Map.Entry<PokerPlayer,Integer> entry: streetResults.entrySet()){
             results.put(entry.getKey(), results.get(entry.getKey()) + entry.getValue());
@@ -179,6 +181,7 @@ public abstract class PokerMatch implements Match {
                 continue;
             }
             if(entry.getValue() != firstVal){
+                System.out.println("rip");
                 return false;
             }
         }
