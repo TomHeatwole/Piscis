@@ -1,8 +1,8 @@
 #!/bin/bash
 mkdir test
-cp ../../*.java test
-cp ../*.java test
-cp *.java test
+cp ../../* test
+cp ../* test
+cp * test
 cd test
 javac *.java 
 strindex() {
@@ -19,7 +19,6 @@ do
         classes="$classes $className"
     fi
 done
-echo $classes 
 java Driver $classes
 cd ..
 rm test/*

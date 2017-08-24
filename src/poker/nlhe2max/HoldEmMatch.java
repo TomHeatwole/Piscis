@@ -28,17 +28,17 @@ public class HoldEmMatch extends PokerMatch {
                 board[0] = deck.next();
                 board[1] = deck.next();
                 board[2] = deck.next();
-                io.output("f:" + Deck.abbr(board[0]) +  Deck.abbr(board[1]) + Deck.abbr(board[2]));                
+                output("f:" + Deck.abbr(board[0]) +  Deck.abbr(board[1]) + Deck.abbr(board[2]));                
                 break;
             case 2: // turn
                 deck.next(); // burn
                 board[3] = deck.next();
-                io.output("t:" + Deck.abbr(board[3]));
+                output("t:" + Deck.abbr(board[3]));
                 break;
             case 3: // river
                 deck.next(); // burn
                 board[4] = deck.next();
-                io.output("r:" + Deck.abbr(board[4]));
+                output("r:" + Deck.abbr(board[4]));
                 break;
         }
     }

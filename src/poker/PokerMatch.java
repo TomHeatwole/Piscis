@@ -2,6 +2,7 @@ import java.util.*;
 
 public abstract class PokerMatch implements Match {
     
+    private IO io;
     private int handsRemaining;
     private int numStreets; 
     public PokerPlayer[] players;
@@ -18,6 +19,7 @@ public abstract class PokerMatch implements Match {
     private int ante;
 
     public PokerMatch(int numHands, String[] playerNames, int initialChipCounts, int numStreets, int[] structure) {
+        io = new IO("MatchToBot.txt","BotToMatch.txt");
         this.handsRemaining = numHands;
         this.deck = new Deck();
         this.net = new HashMap<PokerPlayer,Integer>();
@@ -42,7 +44,7 @@ public abstract class PokerMatch implements Match {
             for(int street = 0; street < numStreets+1; street++){
                 processStreet(street); 
                 processBetting(street); 
-                io.output("hand results: " + handResults);
+                output("hand results: " + handResults);
                 if(isHandOver){//everyone folded except one
                     break; 
                 }
@@ -63,7 +65,7 @@ public abstract class PokerMatch implements Match {
         int amountEachPlayerWins = potSize / winners.size();
         for(PokerPlayer p: winners){
             handResults.put(p, handResults.get(p) + amountEachPlayerWins);
-            io.output(p + " wins " + amountEachPlayerWins);
+            output(p + " wins " + amountEachPlayerWins);
         } 
     }
 
@@ -98,7 +100,7 @@ public abstract class PokerMatch implements Match {
                 streetResults.put(playerToAct, streetResults.get(playerToAct) - smallBlind);
                 potSize += smallBlind;
                 blindsToPost--;
-                io.output(playerToAct + " posts small blind.");
+                output(playerToAct + " posts small blind.");
                 continue;
             }
             if(blindsToPost == 1){
@@ -106,11 +108,11 @@ public abstract class PokerMatch implements Match {
                 streetResults.put(playerToAct, streetResults.get(playerToAct) - bigBlind);
                 potSize += bigBlind;
                 blindsToPost--;
-                io.output(playerToAct + " posts big blind.");
+                output(playerToAct + " posts big blind.");
                 continue;
             } 
             String input = getInput(streetResults, playerToAct);
-            io.output(playerToAct + " did " + input);
+            output(playerToAct + " did " + input);
             String[] splitInp = input.split(" ");
             String action = splitInp[0];
             switch(action){
@@ -141,7 +143,7 @@ public abstract class PokerMatch implements Match {
         if(playersInHand.size() == 1){
             streetResults.put(playersInHand.get(0), streetResults.get(playersInHand.get(0)) + potSize);
             isHandOver = true;
-            io.output(playersInHand.get(0) + " wins pot of " + potSize);
+            output(playersInHand.get(0) + " wins pot of " + potSize);
         }
         for(Map.Entry<PokerPlayer,Integer> entry: streetResults.entrySet()){
             handResults.put(entry.getKey(), handResults.get(entry.getKey()) + entry.getValue());
@@ -259,7 +261,7 @@ public abstract class PokerMatch implements Match {
             int result = entry.getValue();
             net.put(p, net.get(p) + result);
         }
-        io.output("net profits up to this point: " + net);
+        output("net profits up to this point: " + net);
         for(PokerPlayer p: players){
             p.setChips(initialChipCounts);
             handResults.put(p,0);
@@ -286,8 +288,12 @@ public abstract class PokerMatch implements Match {
                 p.dealCard(next);
                 outputStr += Deck.abbr(next); 
             }
-            io.output(outputStr);
+            output(outputStr);
         }
+    }
+
+    public void output(String s) {
+        io.output(s);
     }
 
 }
