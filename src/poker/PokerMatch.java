@@ -63,7 +63,7 @@ public abstract class PokerMatch implements Match {
         int amountEachPlayerWins = potSize / winners.size();
         for(PokerPlayer p: winners){
             handResults.put(p, handResults.get(p) + amountEachPlayerWins);
-            io.output("Player " + p + " wins " + amountEachPlayerWins);
+            io.output(p + " wins " + amountEachPlayerWins);
         } 
     }
 
@@ -98,7 +98,7 @@ public abstract class PokerMatch implements Match {
                 streetResults.put(playerToAct, streetResults.get(playerToAct) - smallBlind);
                 potSize += smallBlind;
                 blindsToPost--;
-                io.output("Player " + playerToAct + " posts small blind.");
+                io.output(playerToAct + " posts small blind.");
                 continue;
             }
             if(blindsToPost == 1){
@@ -106,11 +106,11 @@ public abstract class PokerMatch implements Match {
                 streetResults.put(playerToAct, streetResults.get(playerToAct) - bigBlind);
                 potSize += bigBlind;
                 blindsToPost--;
-                io.output("Player " + playerToAct + " posts big blind.");
+                io.output(playerToAct + " posts big blind.");
                 continue;
             } 
             String input = getInput(streetResults, playerToAct);
-            io.output("Player " + playerToAct + " did " + input);
+            io.output(playerToAct + " did " + input);
             String[] splitInp = input.split(" ");
             String action = splitInp[0];
             switch(action){
@@ -141,7 +141,7 @@ public abstract class PokerMatch implements Match {
         if(playersInHand.size() == 1){
             streetResults.put(playersInHand.get(0), streetResults.get(playersInHand.get(0)) + potSize);
             isHandOver = true;
-            io.output("Player " + playersInHand.get(0) + " wins pot of " + potSize);
+            io.output(playersInHand.get(0) + " wins pot of " + potSize);
         }
         for(Map.Entry<PokerPlayer,Integer> entry: streetResults.entrySet()){
             handResults.put(entry.getKey(), handResults.get(entry.getKey()) + entry.getValue());
@@ -176,15 +176,21 @@ public abstract class PokerMatch implements Match {
         Scanner s = new Scanner(System.in);
         System.out.println("Enter input for player " + playerToAct);
         String rawInp = s.nextLine(); 
-        return processInput(rawInp, streetResults, playerToAct);
+        String processedInp = processInput(rawInp, streetResults, playerToAct);
+        return processedInp;
     } 
 
     public String processInput(String rawInp, Map<PokerPlayer,Integer> streetResults, PokerPlayer playerToAct){
+        int inputLength = rawInp.split(" ").length;
         String action = rawInp.split(" ")[0]; 
         int maxBetOrRaise = playerToAct.getChips() + handResults.get(playerToAct);
         switch(action){
             case "bet":
                 if(valsAreAllTheSame(streetResults)){
+                    if(inputLength < 2){ 
+                        int minBet = bigBlind;    
+                        return processInput("bet " + minBet, streetResults, playerToAct);
+                    }
                     int amount = Integer.parseInt(rawInp.split(" ")[1]);
                     if(amount >= maxBetOrRaise){
                         if(maxBetOrRaise > 0)
@@ -203,13 +209,18 @@ public abstract class PokerMatch implements Match {
                 return "check"; 
             case "raise":
                 if(!valsAreAllTheSame(streetResults)){
+                    if(inputLength < 2){
+                        int minRaise = getSecondMinVal(streetResults) - getMinVal(streetResults) * 2;
+                        minRaise = (minRaise < bigBlind - getMinVal(streetResults) ? bigBlind - getMinVal(streetResults) : minRaise);
+                        return processInput("raise " + minRaise, streetResults, playerToAct); 
+                    }
                     int amount = Integer.parseInt(rawInp.split(" ")[1]);
                     if(amount >= maxBetOrRaise){
                         if(getMinVal(streetResults) > -1 * maxBetOrRaise)
                             return "raise " + maxBetOrRaise;
                         return "call";
                     }    
-                    if(getMinVal(streetResults) - -1 * amount >= bigBlind && getMinVal(streetResults) - -1 * amount >= getSecondMinVal(streetResults) - getMinVal(streetResults)){
+                    if(getMinVal(streetResults) + amount >= bigBlind && getMinVal(streetResults) + amount >= getSecondMinVal(streetResults) - getMinVal(streetResults)){
                         return rawInp;
                     }
                     return "call";
@@ -269,7 +280,7 @@ public abstract class PokerMatch implements Match {
 
     public void deal(int n) {
         for (PokerPlayer p: players){
-            String outputStr = "Player " + p + "'s hand: ";
+            String outputStr = p + "'s hand: ";
             for (int i = 0; i < n; i++){
                 int next = deck.next();
                 p.dealCard(next);
