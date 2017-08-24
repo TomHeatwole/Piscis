@@ -7,7 +7,7 @@ public abstract class PokerMatch implements Match {
     public PokerPlayer[] players;
     private List<PokerPlayer> playersInHand;
     private Map<PokerPlayer,Integer> net; 
-    private Map<PokerPlayer,Integer> results;
+    private Map<PokerPlayer,Integer> handResults;
     public Deck deck;
     private int button; // position of the button 
     private int initialChipCounts;
@@ -17,15 +17,15 @@ public abstract class PokerMatch implements Match {
     private int smallBlind;
     private int ante;
 
-    public PokerMatch(int numHands, int numPlayers, int initialChipCounts, int numStreets, int[] structure) {
+    public PokerMatch(int numHands, String[] playerNames, int initialChipCounts, int numStreets, int[] structure) {
         this.handsRemaining = numHands;
         this.deck = new Deck();
         this.net = new HashMap<PokerPlayer,Integer>();
         this.initialChipCounts = initialChipCounts; 
         this.numStreets = numStreets;
         this.playersInHand = new ArrayList<PokerPlayer>();
-        this.results = new HashMap<PokerPlayer,Integer>();
-        initializePlayers(numPlayers, initialChipCounts);
+        this.handResults = new HashMap<PokerPlayer,Integer>();
+        initializePlayers(playerNames, initialChipCounts);
         this.smallBlind = structure[0];
         this.bigBlind = structure[1];
         this.ante = structure[2]; 
@@ -42,6 +42,7 @@ public abstract class PokerMatch implements Match {
             for(int street = 0; street < numStreets+1; street++){
                 processStreet(street); 
                 processBetting(street); 
+                io.output("hand results: " + handResults);
                 if(isHandOver){//everyone folded except one
                     break; 
                 }
@@ -61,8 +62,8 @@ public abstract class PokerMatch implements Match {
         List<PokerPlayer> winners = showdown(); 
         int amountEachPlayerWins = potSize / winners.size();
         for(PokerPlayer p: winners){
-            results.put(p, results.get(p) + amountEachPlayerWins);
-            io.output("Player " + p.getSeatNum() + " wins " + amountEachPlayerWins);
+            handResults.put(p, handResults.get(p) + amountEachPlayerWins);
+            io.output("Player " + p + " wins " + amountEachPlayerWins);
         } 
     }
 
@@ -80,7 +81,7 @@ public abstract class PokerMatch implements Match {
             posToAct = button;
         int lastPosToAct = (posToAct + blindsToPost - 1 + players.length) % players.length;
         boolean rotationComplete = false; 
-        while(!(rotationComplete && (playersInHand.size() == 1 || valsAreAllTheSame(streetResults)))){
+        while(!(playersInHand.size() == 1 || rotationComplete && valsAreAllTheSame(streetResults))){
             if(headsUpPreflop && blindsToPost == 0){
                 if(posToAct != button)
                     rotationComplete = true;
@@ -97,7 +98,7 @@ public abstract class PokerMatch implements Match {
                 streetResults.put(playerToAct, streetResults.get(playerToAct) - smallBlind);
                 potSize += smallBlind;
                 blindsToPost--;
-                io.output("Player " + playerToAct.getSeatNum() + " posts small blind.");
+                io.output("Player " + playerToAct + " posts small blind.");
                 continue;
             }
             if(blindsToPost == 1){
@@ -105,14 +106,11 @@ public abstract class PokerMatch implements Match {
                 streetResults.put(playerToAct, streetResults.get(playerToAct) - bigBlind);
                 potSize += bigBlind;
                 blindsToPost--;
-                io.output("Player " + playerToAct.getSeatNum() + " posts big blind.");
+                io.output("Player " + playerToAct + " posts big blind.");
                 continue;
             } 
-            String input = processInput(playerToAct);
-            if(!validateInput(input, streetResults, playerToAct)){
-                //what should we do if the input is wrong?
-            }
-            io.output("Player " + playerToAct.getSeatNum() + " did " + input);
+            String input = getInput(streetResults, playerToAct);
+            io.output("Player " + playerToAct + " did " + input);
             String[] splitInp = input.split(" ");
             String action = splitInp[0];
             switch(action){
@@ -132,7 +130,7 @@ public abstract class PokerMatch implements Match {
                     streetResults.put(playerToAct, -1 * Integer.parseInt(splitInp[1]));
                     break;
                 case "fold":
-                    results.put(playerToAct, results.get(playerToAct) + streetResults.get(playerToAct));
+                    handResults.put(playerToAct, handResults.get(playerToAct) + streetResults.get(playerToAct));
                     playersInHand.remove(playerToAct);
                     streetResults.remove(playerToAct);
                 default:
@@ -143,10 +141,10 @@ public abstract class PokerMatch implements Match {
         if(playersInHand.size() == 1){
             streetResults.put(playersInHand.get(0), streetResults.get(playersInHand.get(0)) + potSize);
             isHandOver = true;
-            io.output("Player " + playersInHand.get(0).getSeatNum() + " wins pot of " + potSize);
+            io.output("Player " + playersInHand.get(0) + " wins pot of " + potSize);
         }
         for(Map.Entry<PokerPlayer,Integer> entry: streetResults.entrySet()){
-            results.put(entry.getKey(), results.get(entry.getKey()) + entry.getValue());
+            handResults.put(entry.getKey(), handResults.get(entry.getKey()) + entry.getValue());
         }
     }  
 
@@ -158,17 +156,72 @@ public abstract class PokerMatch implements Match {
         }
         return min;
     }
-
-    //TODO: Actually validate input
-    public boolean validateInput(String input, Map<PokerPlayer,Integer> streetResults, PokerPlayer playerToAct){
-        return true;
+    
+    public int getSecondMinVal(Map<PokerPlayer,Integer>m){
+        int secondMin = 100000000;
+        int min = 100000000;
+        for(Map.Entry<PokerPlayer,Integer> entry: m.entrySet()){
+            if(entry.getValue() < min){
+                secondMin = min;
+                min = entry.getValue();
+            }
+            else if(entry.getValue() < secondMin){
+                secondMin = entry.getValue();
+            }
+        } 
+        return secondMin;
     }
 
-    //TODO: Make this not come form System.in
-    public String processInput(PokerPlayer playerToAct){
+    public String getInput(Map<PokerPlayer,Integer> streetResults, PokerPlayer playerToAct){
         Scanner s = new Scanner(System.in);
-        System.out.println("Enter input for player " + playerToAct.getSeatNum());
-        return s.nextLine(); 
+        System.out.println("Enter input for player " + playerToAct);
+        String rawInp = s.nextLine(); 
+        return processInput(rawInp, streetResults, playerToAct);
+    } 
+
+    public String processInput(String rawInp, Map<PokerPlayer,Integer> streetResults, PokerPlayer playerToAct){
+        String action = rawInp.split(" ")[0]; 
+        int maxBetOrRaise = playerToAct.getChips() + handResults.get(playerToAct);
+        switch(action){
+            case "bet":
+                if(valsAreAllTheSame(streetResults)){
+                    int amount = Integer.parseInt(rawInp.split(" ")[1]);
+                    if(amount >= maxBetOrRaise){
+                        if(maxBetOrRaise > 0)
+                            return "bet " + maxBetOrRaise;
+                        return "check";
+                    }
+                    if(amount >= bigBlind){
+                        return rawInp;
+                    }
+                    return "check"; 
+                }
+                return processInput(rawInp.replace("bet","raise"), streetResults, playerToAct);
+            case "call":
+                if(!valsAreAllTheSame(streetResults))
+                    return rawInp;
+                return "check"; 
+            case "raise":
+                if(!valsAreAllTheSame(streetResults)){
+                    int amount = Integer.parseInt(rawInp.split(" ")[1]);
+                    if(amount >= maxBetOrRaise){
+                        if(getMinVal(streetResults) > -1 * maxBetOrRaise)
+                            return "raise " + maxBetOrRaise;
+                        return "call";
+                    }    
+                    if(getMinVal(streetResults) - -1 * amount >= bigBlind && getMinVal(streetResults) - -1 * amount >= getSecondMinVal(streetResults) - getMinVal(streetResults)){
+                        return rawInp;
+                    }
+                    return "call";
+                }
+                return processInput(rawInp.replace("raise","bet"), streetResults, playerToAct); 
+            case "fold":
+                return rawInp;
+            default:
+                if(valsAreAllTheSame(streetResults))
+                    return "check";
+                return "fold";
+        }
     }
 
     public boolean valsAreAllTheSame(Map<PokerPlayer, Integer> m){
@@ -190,32 +243,33 @@ public abstract class PokerMatch implements Match {
     public abstract void processStreet(int street);    
 
     private void updateNetAndResetCounts(){
-        for(Map.Entry<PokerPlayer,Integer> entry: results.entrySet()){
+        for(Map.Entry<PokerPlayer,Integer> entry: handResults.entrySet()){
             PokerPlayer p = entry.getKey();
             int result = entry.getValue();
             net.put(p, net.get(p) + result);
         }
+        io.output("net profits up to this point: " + net);
         for(PokerPlayer p: players){
             p.setChips(initialChipCounts);
-            results.put(p,0);
+            handResults.put(p,0);
         } 
         potSize = 0;
     }
  
-    private void initializePlayers(int numPlayers, int initialChipCounts){ 
-        this.players = new PokerPlayer[numPlayers];
-        for(int i = 0; i < numPlayers; i++){
-            this.players[i] = new PokerPlayer("TODO Actual name", initialChipCounts, i);
+    private void initializePlayers(String[] playerStrs, int initialChipCounts){ 
+        this.players = new PokerPlayer[playerStrs.length];
+        for(int i = 0; i < playerStrs.length; i++){
+            this.players[i] = new PokerPlayer(playerStrs[i], initialChipCounts, i);
         } 
         for(PokerPlayer p: players){
             this.net.put(p,0); 
-            this.results.put(p,0);
+            this.handResults.put(p,0);
         } 
     }
 
     public void deal(int n) {
         for (PokerPlayer p: players){
-            String outputStr = "Player " + p.getSeatNum() + "'s hand: ";
+            String outputStr = "Player " + p + "'s hand: ";
             for (int i = 0; i < n; i++){
                 int next = deck.next();
                 p.dealCard(next);
@@ -223,7 +277,6 @@ public abstract class PokerMatch implements Match {
             }
             io.output(outputStr);
         }
-        // TODO: Add output
     }
 
 }

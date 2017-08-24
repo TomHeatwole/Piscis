@@ -26,11 +26,15 @@ public class PokerPlayer implements Player {
         return hand;
     } 
 
+    public String toString(){
+        return name;
+    }
+
     public String getName() {
         return name;
     }
 
-    public int getCount() {
+    public int getChips() {
         return chipCount;
     }
 

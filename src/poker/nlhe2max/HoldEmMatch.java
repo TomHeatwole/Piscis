@@ -6,8 +6,8 @@ public class HoldEmMatch extends PokerMatch {
     
     private int[] board; 
     
-    public HoldEmMatch(int numHands, int numPlayers, int initialChipCounts, int[] structure) {
-        super(numHands, numPlayers, initialChipCounts, 3, structure);
+    public HoldEmMatch(int numHands, String[] names, int initialChipCounts, int[] structure) {
+        super(numHands, names, initialChipCounts, 3, structure);
         board = new int[5];
     }
 
