@@ -2,7 +2,7 @@ import java.util.*;
 
 public abstract class PokerMatch implements Match {
     
-    private IO io;
+    private IO[] io;
     private int handsRemaining;
     private int numStreets; 
     public PokerPlayer[] players;
@@ -19,7 +19,7 @@ public abstract class PokerMatch implements Match {
     private int ante;
 
     public PokerMatch(int numHands, String[] playerNames, int initialChipCounts, int numStreets, int[] structure) {
-        io = new IO("MatchToBot.txt","BotToMatch.txt");
+        this.io = new IO[playerNames.length];
         this.handsRemaining = numHands;
         this.deck = new Deck();
         this.net = new HashMap<PokerPlayer,Integer>();
@@ -278,6 +278,8 @@ public abstract class PokerMatch implements Match {
             this.net.put(p,0); 
             this.handResults.put(p,0);
         } 
+        for (int i = 0; i < io.length; i++)
+            io[i] = new IO("Bot" + (i+1) + "ToMatch.txt", "MatchToBot" + (i+1) + ".txt");
     }
 
     public void deal(int n) {
@@ -292,8 +294,13 @@ public abstract class PokerMatch implements Match {
         }
     }
 
+    public void output(String s, int p) {
+        io[p].output(s);
+    }
+
     public void output(String s) {
-        io.output(s);
+        for (int i = 0; i < io.length; i++)
+            io[i].output(s);
     }
 
 }
