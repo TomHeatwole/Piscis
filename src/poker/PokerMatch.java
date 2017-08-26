@@ -2,7 +2,7 @@ import java.util.*;
 
 public abstract class PokerMatch implements Match {
     
-    private IO[] io;
+    public IO[] io;
     private int handsRemaining;
     private int numStreets; 
     public PokerPlayer[] players;
@@ -17,8 +17,9 @@ public abstract class PokerMatch implements Match {
     private int bigBlind;
     private int smallBlind;
     private int ante;
+    public int timePerMove;
 
-    public PokerMatch(int numHands, String[] playerNames, int initialChipCounts, int numStreets, int[] structure) {
+    public PokerMatch(int numHands, String[] playerNames, int initialChipCounts, int numStreets, int[] structure, int timePerMove) {
         this.io = new IO[playerNames.length];
         this.handsRemaining = numHands;
         this.deck = new Deck();
@@ -31,11 +32,14 @@ public abstract class PokerMatch implements Match {
         this.smallBlind = structure[0];
         this.bigBlind = structure[1];
         this.ante = structure[2]; 
+        this.timePerMove = timePerMove;
     }
     
     public void play() {
+        sendStartOfMatchInfo();
         button = (int)(Math.random() * players.length); 
         while (handsRemaining > 0){
+            sendStartOfHandInfo();
             isHandOver = false;
             deck.shuffle();
             for(PokerPlayer p: players){
@@ -58,6 +62,23 @@ public abstract class PokerMatch implements Match {
         }
     }
     
+    private void sendStartOfHandInfo(){
+        output("handsLeft " + handsRemaining);
+        output("button p" + button);
+    }
+
+    private void sendStartOfMatchInfo(){
+        output("timePerMove " + timePerMove);
+        output("smallBlind " + smallBlind);
+        output("bigBlind " + bigBlind);
+        output("ante " + ante);
+        output("hands " + handsRemaining);
+        output("initialChipCounts " + initialChipCounts);
+        for(int i = 0; i < players.length; i++){
+            output("yourSeatNumber " + i, i);
+        }
+    }
+
     public abstract List<PokerPlayer> showdown();
 
     public void processShowdown(){
@@ -65,7 +86,6 @@ public abstract class PokerMatch implements Match {
         int amountEachPlayerWins = potSize / winners.size();
         for(PokerPlayer p: winners){
             handResults.put(p, handResults.get(p) + amountEachPlayerWins);
-            output(p + " wins " + amountEachPlayerWins);
         } 
     }
 
@@ -96,23 +116,23 @@ public abstract class PokerMatch implements Match {
                 continue;
             }
             if(blindsToPost == 2){
+                output("p" + posToAct + " small");
                 posToAct = (posToAct + 1) % players.length;
                 streetResults.put(playerToAct, streetResults.get(playerToAct) - smallBlind);
                 potSize += smallBlind;
                 blindsToPost--;
-                output(playerToAct + " posts small blind.");
                 continue;
             }
             if(blindsToPost == 1){
+                output("p" + posToAct + " big");
                 posToAct = (posToAct + 1) % players.length;
                 streetResults.put(playerToAct, streetResults.get(playerToAct) - bigBlind);
                 potSize += bigBlind;
                 blindsToPost--;
-                output(playerToAct + " posts big blind.");
                 continue;
             } 
             String input = getInput(streetResults, playerToAct);
-            output(playerToAct + " did " + input);
+            output("p" + posToAct + " " + input);
             String[] splitInp = input.split(" ");
             String action = splitInp[0];
             switch(action){
@@ -174,10 +194,29 @@ public abstract class PokerMatch implements Match {
         return secondMin;
     }
 
+    private int getToCall(Map<PokerPlayer,Integer> streetResults, PokerPlayer playerToAct){
+        return getMinVal(streetResults) * -1 + streetResults.get(playerToAct);  
+    }
+
+    private int getMinRaise(Map<PokerPlayer,Integer> streetResults, PokerPlayer playerToAct){
+        int minRaise = getSecondMinVal(streetResults) - getMinVal(streetResults) * 2;
+        minRaise = (minRaise < bigBlind - getMinVal(streetResults) ? bigBlind - getMinVal(streetResults) : minRaise);
+        return minRaise;
+    }
+
     public String getInput(Map<PokerPlayer,Integer> streetResults, PokerPlayer playerToAct){
-        Scanner s = new Scanner(System.in);
-        System.out.println("Enter input for player " + playerToAct);
-        String rawInp = s.nextLine(); 
+        String outputStr = "action toCall " + getToCall(streetResults,playerToAct) + " minToRaise " + getMinRaise(streetResults, playerToAct) + " pot " + potSize; 
+        output(outputStr,playerToAct.getSeatNum());
+        //check-fold if they don't respond in time
+        String rawInp = "check"; 
+        long startMillis = System.currentTimeMillis();
+        while(System.currentTimeMillis() - startMillis <= timePerMove){
+            String inp = input(playerToAct.getSeatNum());    
+            if(inp != ""){
+                rawInp = inp;
+                break;
+            }
+        }
         String processedInp = processInput(rawInp, streetResults, playerToAct);
         return processedInp;
     } 
@@ -212,8 +251,7 @@ public abstract class PokerMatch implements Match {
             case "raise":
                 if(!valsAreAllTheSame(streetResults)){
                     if(inputLength < 2){
-                        int minRaise = getSecondMinVal(streetResults) - getMinVal(streetResults) * 2;
-                        minRaise = (minRaise < bigBlind - getMinVal(streetResults) ? bigBlind - getMinVal(streetResults) : minRaise);
+                        int minRaise = getMinRaise(streetResults, playerToAct);
                         return processInput("raise " + minRaise, streetResults, playerToAct); 
                     }
                     int amount = Integer.parseInt(rawInp.split(" ")[1]);
@@ -256,12 +294,17 @@ public abstract class PokerMatch implements Match {
     public abstract void processStreet(int street);    
 
     private void updateNetAndResetCounts(){
+        String handResultStr = "handResult";
+        String matchTotalStr = "matchTotal";
         for(Map.Entry<PokerPlayer,Integer> entry: handResults.entrySet()){
             PokerPlayer p = entry.getKey();
             int result = entry.getValue();
             net.put(p, net.get(p) + result);
+            handResultStr += " p" + p.getSeatNum() + " " + result;
+            matchTotalStr += " p" + p.getSeatNum() + " " + net.get(p);
         }
-        output("net profits up to this point: " + net);
+        output(handResultStr);
+        output(matchTotalStr);
         for(PokerPlayer p: players){
             p.setChips(initialChipCounts);
             handResults.put(p,0);
@@ -284,14 +327,18 @@ public abstract class PokerMatch implements Match {
 
     public void deal(int n) {
         for (PokerPlayer p: players){
-            String outputStr = p + "'s hand: ";
+            String outputStr = "yourHand";
             for (int i = 0; i < n; i++){
                 int next = deck.next();
                 p.dealCard(next);
                 outputStr += Deck.abbr(next); 
             }
-            output(outputStr);
+            output(outputStr, p.getSeatNum());
         }
+    }
+
+    public String input(int p){
+        return io[p].input(); 
     }
 
     public void output(String s, int p) {
