@@ -52,7 +52,6 @@ public class IO {
             return lines[0];
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println((in == null) ? "LOL" : "Then what's the problem");
         }
         return "";
     }
