@@ -71,9 +71,9 @@ public abstract class BotIO {
             play = false;
             return;
         }
-        sendToBot(s); 
+        output(sendToBot(s));
     }
 
-    public abstract void sendToBot(String s);
+    public abstract String sendToBot(String s);
     public abstract Object createBot();
 } 

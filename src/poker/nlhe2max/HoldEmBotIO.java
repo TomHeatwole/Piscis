@@ -1,10 +1,13 @@
 public class HoldEmBotIO extends BotIO {
 
-    public void sendToBot(String s) {
+    public HoldEmBotIO(int botNumber) {
+        super(botNumber);
+    }
+
+    public String sendToBot(String s) {
         if (botNumber == 1)
-            ((Bot1)bot).processMatchInfo(s);
-        else
-            ((Bot2)bot).processMatchInfo(s);
+            return ((Bot1)bot).processMatchInfo(s);
+        return ((Bot2)bot).processMatchInfo(s);
     } 
     
     public Object createBot() {

@@ -4,6 +4,10 @@ cp ../../* test
 cp ../* test
 cp * test
 cd test
+touch MatchToBot1.txt
+touch MatchToBot2.txt
+touch BotToMatch1.txt
+touch BotToMatch2.txt
 readBot1=true;
 botNames="botNames.txt"
 while IFS= read -r name
@@ -17,7 +21,7 @@ do
     fi
 done < "$botNames"
 javac *.java 
-java Driver $classes
+java BotDriver 1 & java BotDriver 2 & java Driver
 cd ..
 rm test/*
 rmdir test
