@@ -6,8 +6,8 @@ cp * test
 cd test
 touch MatchToBot1.txt
 touch MatchToBot2.txt
-touch BotToMatch1.txt
-touch BotToMatch2.txt
+touch Bot1ToMatch.txt
+touch Bot2ToMatch.txt
 readBot1=true;
 botNames="botNames.txt"
 while IFS= read -r name

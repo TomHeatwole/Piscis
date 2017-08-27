@@ -322,7 +322,7 @@ public abstract class PokerMatch implements Match {
             this.handResults.put(p,0);
         } 
         for (int i = 0; i < io.length; i++)
-            io[i] = new IO("Bot" + (i+1) + "ToMatch.txt", "MatchToBot" + (i+1) + ".txt");
+            io[i] = new IO(i+1);
     }
 
     public void deal(int n) {

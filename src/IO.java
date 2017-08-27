@@ -9,11 +9,11 @@ public class IO {
     private FileOutputStream out;
     private LinkedList<String> queuedInput;
 
-    public IO (String inputFile, String outputFile) {
+    public IO (int botNumber) {
         queuedInput = new LinkedList<String>();
         try {
-            in = new FileInputStream(inputFile);
-            out = new FileOutputStream(outputFile);
+            in = new FileInputStream("Bot" + botNumber + "ToMatch.txt");
+            out = new FileOutputStream("MatchToBot" + botNumber + ".txt");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -52,6 +52,7 @@ public class IO {
             return lines[0];
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println((in == null) ? "LOL" : "Then what's the problem");
         }
         return "";
     }

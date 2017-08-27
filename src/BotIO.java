@@ -16,7 +16,7 @@ public abstract class BotIO {
             this.botNumber = botNumber;
             bot = createBot(); 
             in = new FileInputStream("MatchToBot" + botNumber + ".txt");
-            out = new FileOutputStream("BotToMatch" + botNumber + ".txt");
+            out = new FileOutputStream("Bot" + botNumber + "ToMatch.txt");
             play = true;
         } catch (Exception e) {
             e.printStackTrace();
