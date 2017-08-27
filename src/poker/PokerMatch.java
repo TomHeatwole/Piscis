@@ -60,6 +60,7 @@ public abstract class PokerMatch implements Match {
             button = (button + 1) % players.length; 
             handsRemaining--; 
         }
+        output("X");
     }
     
     private void sendStartOfHandInfo(){

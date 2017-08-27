@@ -4,7 +4,7 @@ public class HoldEmBotIO extends BotIO {
         super(botNumber);
     }
 
-    public String sendToBot(String s) {
+    public String getBotResponse(String s) {
         if (botNumber == 1)
             return ((Bot1)bot).processMatchInfo(s);
         return ((Bot2)bot).processMatchInfo(s);
