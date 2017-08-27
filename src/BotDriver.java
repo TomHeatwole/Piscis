@@ -3,16 +3,20 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.LinkedList;
     
-public class BotDriver {
+public abstract class BotDriver {
 
     private static FileInputStream in;
     private static FileOutputStream out;
     private static boolean play = true;
+    public static object bot;
+    public static int botNumber;
 
     public static void main (String[] args) {        
         try {
-            in = new FileInputStream(args[0]);
-            out = new FileOutputStream(args[1]);
+            botNumber = Integer.parseInt(args[0]);
+            bots = createBot(); 
+            in = new FileInputStream("MatchToBot" + botNumber + ".txt");
+            out = new FileOutputStream("BotToMatch" + botNumber + ".txt");
             while (play) {
                 while (in.available() == 0){}
                 String s = input();
@@ -59,6 +63,9 @@ public class BotDriver {
             play = false;
             return;
         }
-        System.out.println(s); //TODO: Change this to send to bot
+        sendToBot(s); 
     }
+
+    public abstract void sendToBot(String s);
+    public abstract Object createBot();
 } 

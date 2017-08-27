@@ -30,10 +30,8 @@ public class IO {
     }
 
     public String input() {
-        if (queuedInput.size() > 0) {
-            System.out.println("We using that fat linkedlist");
+        if (queuedInput.size() > 0) 
             return queuedInput.remove();
-        }
         try {
             while (in.available() == 0) {
                 //TODO: Start a counter before this, check if the counter reaches n seconds
