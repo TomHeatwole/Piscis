@@ -1,26 +1,27 @@
 #!/bin/bash
 mkdir test
-cp ../../*.java test
-cp ../*.java test
-cp *.java test
+cp ../../* test
+cp ../* test
+cp * test
 cd test
-javac *.java 
-strindex() {
-    x="${1%%$2*}"
-    [[ "$x" = "$1" ]] && echo -1 || echo "${#x}"
-}
-classes=""
-for file in *.class
-do      
-    pos=$(strindex $file .class)
-    className=$( echo $file | cut -c1-$pos )
-    if [ "$className" != "Driver" ]
+touch MatchToBot1.txt
+touch MatchToBot2.txt
+touch BotToMatch1.txt
+touch BotToMatch2.txt
+readBot1=true;
+botNames="botNames.txt"
+while IFS= read -r name
+do
+    if [ "$readBot1" == true ]
     then
-        classes="$classes $className"
+        sed 's/'"$name"'/Bot1/g' "$name".java > Bot1.java
+        readBot1=false;
+    else
+        sed 's/'"$name"'/Bot2/g' "$name".java > Bot2.java
     fi
-done
-echo $classes 
-java Driver $classes
+done < "$botNames"
+javac *.java 
+java BotDriver 1 & java BotDriver 2 & java Driver
 cd ..
 rm test/*
 rmdir test
