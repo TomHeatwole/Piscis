@@ -1,12 +1,11 @@
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class IO {
 
-    FileInputStream in;
-    FileOutputStream out;
+    private FileInputStream in;
+    private FileOutputStream out;
 
     public IO (String inputFile, String outputFile) {
         try {
