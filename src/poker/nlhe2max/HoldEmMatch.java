@@ -6,8 +6,8 @@ public class HoldEmMatch extends PokerMatch {
     
     private int[] board; 
     
-    public HoldEmMatch(int numHands, String[] names, int initialChipCounts, int[] structure) {
-        super(numHands, names, initialChipCounts, 3, structure);
+    public HoldEmMatch(int numHands, String[] names, int initialChipCounts, int[] structure, int timePerMove){
+        super(numHands, names, initialChipCounts, 3, structure, timePerMove);
         board = new int[5];
     }
 
@@ -28,17 +28,17 @@ public class HoldEmMatch extends PokerMatch {
                 board[0] = deck.next();
                 board[1] = deck.next();
                 board[2] = deck.next();
-                output("f:" + Deck.abbr(board[0]) +  Deck.abbr(board[1]) + Deck.abbr(board[2]));                
+                output("flop " + Deck.abbr(board[0]) +  Deck.abbr(board[1]) + Deck.abbr(board[2]));                
                 break;
             case 2: // turn
                 deck.next(); // burn
                 board[3] = deck.next();
-                output("t:" + Deck.abbr(board[3]));
+                output("turn " + Deck.abbr(board[3]));
                 break;
             case 3: // river
                 deck.next(); // burn
                 board[4] = deck.next();
-                output("r:" + Deck.abbr(board[4]));
+                output("river " + Deck.abbr(board[4]));
                 break;
         }
     }
@@ -47,6 +47,7 @@ public class HoldEmMatch extends PokerMatch {
         List<PokerPlayer> w  = new ArrayList<PokerPlayer>();
         int[] h0 = bestHand(players[0]);
         int[] h1 = bestHand(players[1]);
+        output("showdown p0 " + Poker.handStrength(h0) + " p1 " + Poker.handStrength(h1));
         int result = Poker.compareHands(h0, h1);
         if (result == 1) {
             w.add(players[0]);

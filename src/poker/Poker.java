@@ -20,14 +20,14 @@ public class Poker {
         char secondaryAbbrStrength; 
         switch (handStrengthArr[0]){
             case 8: //straight flush
-                return abbrStrength + "-high straight flush of "; // + Deck.suitName(cards[0]); TODOL say suit of straightflush
+                return abbrStrength + "-high straight flush"; 
             case 7: //quads
                 return "Quad " + abbrStrength + "s";
             case 6: //full house
                 secondaryAbbrStrength = Deck.abbr(handStrengthArr[2]-1).charAt(0);
                 return abbrStrength + "s full of " + secondaryAbbrStrength + "s";
             case 5: //flush
-                return abbrStrength + "-high flush of "; // + Deck.suitName(cards[0]); TODO: say suit of flush 
+                return abbrStrength + "-high flush";  
             case 4: //straight
                 return abbrStrength + "-high straight";
             case 3: //trips
