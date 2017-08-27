@@ -4,7 +4,7 @@ public class SampleBot{
     }
 
     public String processMatchInfo(String s){
-        if(s.split(" ") == "action")
+        if(s.split(" ")[0] == "action")
             return "check";
         return "";
     }
