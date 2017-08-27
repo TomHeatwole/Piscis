@@ -1,6 +1,7 @@
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit; // For now this is only here for testing so delete if seen in repo
 
 public class IO {
 
@@ -37,4 +38,16 @@ public class IO {
         }
         return "";
     }
+
+    // Main method exists only for testing. Delete if found in repo
+    public static void main (String[] args) {
+        IO io = new IO("i.txt", "o.txt");
+        io.output("test1"); 
+        io.output("test2");
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (Exception e) {e.printStackTrace();}
+        io.output("test3");
+    }
+
 }

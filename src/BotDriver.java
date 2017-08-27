@@ -11,6 +11,10 @@ public class BotDriver {
         try {
             in = new FileInputStream(args[0]);
             out = new FileOutputStream(args[1]);
+            while (true) {
+                while (in.available() == 0){}
+                System.out.println(input());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
