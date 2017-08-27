@@ -3,20 +3,28 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.LinkedList;
     
-public abstract class BotDriver {
+public abstract class BotIO {
 
-    private static FileInputStream in;
-    private static FileOutputStream out;
-    private static boolean play = true;
-    public static object bot;
-    public static int botNumber;
+    private FileInputStream in;
+    private FileOutputStream out;
+    private boolean play = true;
+    public Object bot;
+    public int botNumber;
 
-    public static void main (String[] args) {        
+    public BotIO (int botNumber) {        
         try {
-            botNumber = Integer.parseInt(args[0]);
-            bots = createBot(); 
+            this.botNumber = botNumber;
+            bot = createBot(); 
             in = new FileInputStream("MatchToBot" + botNumber + ".txt");
             out = new FileOutputStream("BotToMatch" + botNumber + ".txt");
+            play = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void start() {
+        try {
             while (play) {
                 while (in.available() == 0){}
                 String s = input();
@@ -29,7 +37,7 @@ public abstract class BotDriver {
         }
     }
 
-    public static void output(String s) {
+    public void output(String s) {
         s = s + "\n";
         byte[] bytes = s.getBytes();
         try {
@@ -39,7 +47,7 @@ public abstract class BotDriver {
         }
     }
 
-    public static String input() {
+    public String input() {
         try {
             LinkedList<Byte> bytes = new LinkedList<Byte>(); // This needs to be a list not an Array of size 
                                                              // in.available because a bot could theoretically
@@ -56,7 +64,7 @@ public abstract class BotDriver {
         return "";
     }
 
-    public static void processInput(String s) {
+    public void processInput(String s) {
         if (s == "")
             return; // TODO: process empty input error
         if (s.charAt(0) == 'X') {

@@ -1,10 +1,10 @@
-public class HoldEmBotDriver extends BotDriver {
+public class HoldEmBotIO extends BotIO {
 
     public void sendToBot(String s) {
         if (botNumber == 1)
-            ((Bot1)(bot)).processMatchInfo(s);
+            ((Bot1)bot).processMatchInfo(s);
         else
-            ((Bot2)(bot)).processMatchInfo(s);
+            ((Bot2)bot).processMatchInfo(s);
     } 
     
     public Object createBot() {
