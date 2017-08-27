@@ -3,4 +3,4 @@ javac IO.java
 javac BotDriver.java
 touch i.txt
 touch o.txt
-java IO & java BotDriver o.txt i.txt &
+java IO & java BotDriver o.txt i.txt 

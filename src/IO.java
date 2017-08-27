@@ -18,6 +18,7 @@ public class IO {
     }
 
     public void output(String s) {
+        s = s + "\n";
         byte[] bytes = s.getBytes();
         try {
             out.write(bytes);
@@ -32,7 +33,7 @@ public class IO {
             byte b = 0;
             for (int i = 0; (b = (byte)(in.read())) != -1; i++)
                  bytes[i] = b;
-            return (new String(bytes));
+            return (new String(bytes)).trim();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -48,6 +49,10 @@ public class IO {
             TimeUnit.SECONDS.sleep(1);
         } catch (Exception e) {e.printStackTrace();}
         io.output("test3");
+        try {
+            TimeUnit.SECONDS.sleep(4);
+        } catch (Exception e) {e.printStackTrace();}
+        io.output("X");
     }
 
 }

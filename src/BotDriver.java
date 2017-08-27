@@ -6,14 +6,22 @@ public class BotDriver {
 
     private static FileInputStream in;
     private static FileOutputStream out;
+    private static boolean play = true;
 
     public static void main (String[] args) {        
         try {
             in = new FileInputStream(args[0]);
             out = new FileOutputStream(args[1]);
-            while (true) {
+            while (play) {
                 while (in.available() == 0){}
-                System.out.println(input());
+                String s = input();
+                if (!s.contains("\n"))
+                    processInput(s);
+                else {
+                    String[] lines = s.split("\n");
+                    for (int i = 0; i < lines.length; i++)
+                        processInput(lines[i]);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -21,6 +29,7 @@ public class BotDriver {
     }
 
     public static void output(String s) {
+        s = s + "\n";
         byte[] bytes = s.getBytes();
         try {
             out.write(bytes);
@@ -35,10 +44,18 @@ public class BotDriver {
             byte b = 0;
             for (int i = 0; (b = (byte)(in.read())) != -1; i++)
                  bytes[i] = b;
-            return (new String(bytes));
+            return (new String(bytes)).trim();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return "";
     }
-}
+
+    public static void processInput(String s) {
+        if (s.charAt(0) == 'X') {
+            play = false;
+            return;
+        }
+        System.out.println(s); //TODO: Change this to send to bot
+    }
+} 
