@@ -15,14 +15,12 @@ public class BotDriver {
             while (play) {
                 while (in.available() == 0){}
                 String s = input();
-                if (!s.contains("\n"))
-                    processInput(s);
-                else {
-                    String[] lines = s.split("\n");
-                    for (int i = 0; i < lines.length; i++)
-                        processInput(lines[i]);
-                }
+                String[] lines = s.split("\n");
+                for (int i = 0; i < lines.length; i++)
+                    processInput(lines[i]);
             }
+            output("Line 1 \nLine 2");
+            output("LINE 3");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -52,6 +50,8 @@ public class BotDriver {
     }
 
     public static void processInput(String s) {
+        if (s == "")
+            return; // TODO: process empty input error
         if (s.charAt(0) == 'X') {
             play = false;
             return;
