@@ -23,5 +23,4 @@ done < "$botNames"
 javac *.java 
 java BotDriver 1 & java BotDriver 2 & java Driver
 cd ..
-rm test/*
-rmdir test
+rm -rf test

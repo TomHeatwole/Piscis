@@ -164,7 +164,6 @@ public abstract class PokerMatch implements Match {
         if(playersInHand.size() == 1){
             streetResults.put(playersInHand.get(0), streetResults.get(playersInHand.get(0)) + potSize);
             isHandOver = true;
-            output(playersInHand.get(0) + " wins pot of " + potSize);
         }
         for(Map.Entry<PokerPlayer,Integer> entry: streetResults.entrySet()){
             handResults.put(entry.getKey(), handResults.get(entry.getKey()) + entry.getValue());
@@ -329,7 +328,7 @@ public abstract class PokerMatch implements Match {
 
     public void deal(int n) {
         for (PokerPlayer p: players){
-            String outputStr = "yourHand";
+            String outputStr = "yourHand ";
             for (int i = 0; i < n; i++){
                 int next = deck.next();
                 p.dealCard(next);
