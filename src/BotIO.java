@@ -38,7 +38,9 @@ public abstract class BotIO {
     }
 
     public void output(String s) {
-        s = s + "\n";
+        if(s.equals(""))
+            return;
+        s+="\n";
         byte[] bytes = s.getBytes();
         try {
             out.write(bytes);
@@ -65,8 +67,8 @@ public abstract class BotIO {
     }
 
     public void processInput(String s) {
-        if (s == "")
-            return; // TODO: process empty input error
+        if (s.equals(""))
+            return; 
         if (s.charAt(0) == 'X') {
             play = false;
             return;
