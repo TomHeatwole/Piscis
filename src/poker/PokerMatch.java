@@ -308,6 +308,7 @@ public abstract class PokerMatch implements Match {
         output(matchTotalStr);
         for(PokerPlayer p: players){
             p.setChips(initialChipCounts);
+            playersInHand.remove(p);
             handResults.put(p,0);
         } 
         potSize = 0;
