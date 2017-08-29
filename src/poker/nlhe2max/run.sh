@@ -11,16 +11,33 @@ touch Bot2ToMatch.txt
 readBot1=true;
 botNames="botNames.txt"
 runCommand=""
-while IFS= read -r name
+while IFS="\n" read -r fullName
 do
+    nameParts=(${fullName//./ }) 
+    name=${nameParts[0]}
+    lang=${nameParts[1]}
     if [ "$readBot1" == true ]
     then
-        sed 's/'"$name"'/Bot1/g' "$name".java > Bot1.java
-        runCommand+="java BotDriver 1 & "
         readBot1=false;
+        if [ "$lang" == "java" ] 
+        then
+            sed 's/'"$name"'/Bot1/g' "$fullName" > Bot1.java
+            runCommand+="java BotDriver 1 & "
+        elif [ "$lang" == "python" ]
+        then
+            sed 's/'"$name"'/Bot1/g' "$fullName" > Bot1.py
+            runCommand+="python BotDriver 1 & "
+        fi
     else
-        sed 's/'"$name"'/Bot2/g' "$name".java > Bot2.java
-        runCommand+="java BotDriver 2 & "
+        if [ "$lang" == "java" ]
+        then
+            sed 's/'"$name"'/Bot2/g' "$fullName" > Bot2.java
+            runCommand+="java BotDriver 2 & "
+        elif [ "$lang" == "python" ]
+        then
+            sed 's/'"$name"'/Bot2/g' "$fullName" > Bot2.py
+            runCommand+="python BotDriver 2 & "
+        fi
     fi
 done < "$botNames"
 javac *.java 
