@@ -10,17 +10,21 @@ touch Bot1ToMatch.txt
 touch Bot2ToMatch.txt
 readBot1=true;
 botNames="botNames.txt"
+runCommand=""
 while IFS= read -r name
 do
     if [ "$readBot1" == true ]
     then
         sed 's/'"$name"'/Bot1/g' "$name".java > Bot1.java
+        runCommand+="java BotDriver 1 & "
         readBot1=false;
     else
         sed 's/'"$name"'/Bot2/g' "$name".java > Bot2.java
+        runCommand+="java BotDriver 2 & "
     fi
 done < "$botNames"
 javac *.java 
-java BotDriver 1 & java BotDriver 2 & java Driver
+runCommand+="java Driver"
+eval $runCommand
 cd ..
 rm -rf test
