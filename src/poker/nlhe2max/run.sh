@@ -50,4 +50,4 @@ javac *.java
 runCommand+="java Driver"
 eval $runCommand
 cd ..
-#rm -rf test
+rm -rf test

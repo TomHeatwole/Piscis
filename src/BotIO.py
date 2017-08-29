@@ -1,36 +1,38 @@
 import time
+import sys
 
 class BotIO:
 
     def __init__(self, botNum):
         self.botNum = botNum
         self.bot = self.createBot()
-        self.infile = open("MatchToBot" + str(botNum) + ".txt",'r')
-        self.outfile = open("Bot" + str(botNum) + "ToMatch.txt",'w')
+        self.infile = 'MatchToBot' + str(botNum) + '.txt'
+        self.outfile = 'Bot' + str(botNum) + 'ToMatch.txt'
         self.play = True    
 
     def start(self):
-        while self.play:
-           where = self.infile.tell()
-           line = self.infile.readline()
-           if not line:
-               time.sleep(0.1)
-               self.infile.seek(where)
-           else:
-               self.processInput(line)
+        with open(self.infile, 'r') as f:
+            while self.play:
+                where = f.tell()
+                line = f.readline()
+                if not line:
+                    time.sleep(1)
+                    f.seek(where)
+                else:
+                    self.processInput(line)
 
     def output(self, s):
         if not len(s):
             return
         s += '\n'
-        self.outfile.write(s)
-        print('here')
+        with open(self.outfile, 'a') as f:
+            f.write(s)
 
     def processInput(self, s):
         if not len(s):
             return
         if s[0] == 'X':
-            play = False
+            self.play = False
             return
         self.output(self.getBotResponse(s))
 

@@ -48,7 +48,6 @@ public abstract class PokerMatch implements Match {
             for(int street = 0; street < numStreets+1; street++){
                 processStreet(street); 
                 processBetting(street); 
-                output("hand results: " + handResults);
                 if(isHandOver){//everyone folded except one
                     break; 
                 }
