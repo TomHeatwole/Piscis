@@ -4,6 +4,7 @@ class SampleBot:
         #fill in later
     
     def processMatchInfo(self, info):
+        print(info)
         if info.split(" ")[0] == 'action':
             return "check"
         return ""         
